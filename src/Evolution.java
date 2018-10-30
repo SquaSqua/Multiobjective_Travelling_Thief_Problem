@@ -37,6 +37,7 @@ public class Evolution {
     private void readParameters() {
         BufferedReader reader;
         int[][] items;
+        double[][] distances = createDistancesArray();
         int capacity;
         int numOfItems;
         double minSpeed;
@@ -67,14 +68,58 @@ public class Evolution {
                 for(int j = 0; j < 4; j++) {
                     items[i][j] = Integer.parseInt(st.nextToken());
                 }
+                Point ideal = countPoint(true, distances, dimension, items);
+                Point nadir = countPoint(false, distances, dimension, items);
             }
-            greedy = new GreedyPackingPlan(minSpeed, maxSpeed, capacity, dimension, createDistancesArray(), items);
+            greedy = new GreedyPackingPlan(minSpeed, maxSpeed, capacity, dimension, distances, items);
         } catch (FileNotFoundException fnfe) {
             System.out.println("A file doesn't exist or is in use now!");
         } catch (Exception e) {
             System.out.println("An error has occurred while reading data: " + e);
         }
 
+    }
+
+    //for time as y and wage as x
+    private Point countPoint(boolean isIdeal, double[][] distances, int dimension, int[][] items) {
+        double time;
+        int wage;
+        Point point;
+        if(isIdeal){
+            time = Double.MAX_VALUE;
+            wage = Integer.MIN_VALUE;
+            for(int i = 0; i < distances.length; i++) {
+                for(int j = i + 1; j < distances[i].length; j++) {
+                    if(time > distances[i][j] && distances[i][j] != 0) {
+                        time = distances[i][j];
+                    }
+                }
+            }
+            for(int i = 0; i < items.length; i++) {
+                if(wage < items[i][1]) {
+                    wage = items[i][1];
+                }
+            }
+            point = new Point(wage * items.length, time * dimension);
+        }
+        else {
+            time = Double.MIN_VALUE;
+            wage = Integer.MAX_VALUE;
+            for(int i = 0; i < distances.length; i++) {
+                for(int j = i + 1; j < distances[i].length; j++) {
+                    if(time > distances[i][j] && distances[i][j] != 0) {
+                        time = distances[i][j];
+                    }
+                }
+            }
+            for(int i = 0; i < items.length; i++) {
+                if(wage < items[i][1]) {
+                    wage = items[i][1];
+                }
+            }
+            point = new Point(wage * items.length, time * dimension);
+        }
+        return point;
     }
 
     private double getNumber(String line) {
@@ -200,6 +245,4 @@ public class Evolution {
         }
         return distances;
     }
-
-
 }

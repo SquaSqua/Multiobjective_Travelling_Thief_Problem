@@ -8,6 +8,10 @@ public class Individual {
 
     private double mutProb;
 
+    //fields accessed only through methods in ParetoFrontGenerator
+    private double crowdingDistance;
+    private int rank;
+
     public Individual(int[] route, double mutProb) {
         this.route = route;
         this.mutProb = mutProb;
@@ -30,10 +34,34 @@ public class Individual {
         return (int) Math.signum(Math.signum(fitnessTime - o.fitnessTime) + Math.signum(fitnessWage - o.fitnessWage));
     }
 
+
+    //getters
     public int[] getRoute() {
         return route;
     }
 
+    public int[] getPackingPlan() {
+        return packingPlan;
+    }
+
+    public int getFitnessTime() {
+        return fitnessTime;
+    }
+
+    public double getFitnessWage() {
+        return fitnessWage;
+    }
+
+    public double getCrowdingDistance() {
+        return crowdingDistance;
+    }
+
+    public int getRank() {
+        return rank;
+    }
+
+
+    //setters
     public void setRoute(int[] route) {
         this.route = route;
     }
@@ -50,11 +78,12 @@ public class Individual {
         this.fitnessWage = fitnessWage;
     }
 
-    public double getFitnessWage() {
-        return fitnessWage;
+    public void setCrowdingDistance(double crowdingDistance) {
+        this.crowdingDistance = crowdingDistance;
     }
 
-    public int getFitnessTime() {
-        return fitnessTime;
+    public void setRank(int rank) {
+        this.rank = rank;
     }
+
 }
