@@ -3,6 +3,7 @@ import java.io.PrintWriter;
 
 public class Runner {
     public static void main(String[] args) {
+
         Evolution population = new Evolution("src/definitionFiles/easy_0.ttp", 10, 2,
                 2, 0, 0);
         String results = "results.csv";

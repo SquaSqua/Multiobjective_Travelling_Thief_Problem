@@ -1,17 +1,10 @@
 public class Point {
-    private int wage;
-    private double time;
+    public int x;//wage;
+    public double y;//time;
 
     public Point(int wage, double time) {
-        this.wage = wage;
-        this.time = time;
+        x = wage;
+        y = time;
     }
 
-    public double getTime() {
-        return time;
-    }
-
-    public int getWage() {
-        return wage;
-    }
 }

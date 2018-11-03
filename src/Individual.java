@@ -1,6 +1,7 @@
 import java.util.Random;
 
 public class Individual {
+
     private int[] route;
     private int[] packingPlan;
     private int fitnessTime;
@@ -62,9 +63,6 @@ public class Individual {
 
 
     //setters
-    public void setRoute(int[] route) {
-        this.route = route;
-    }
 
     public void setPackingPlan(int[] packingPlan) {
         this.packingPlan = packingPlan;

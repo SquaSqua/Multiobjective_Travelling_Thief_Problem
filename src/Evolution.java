@@ -9,11 +9,13 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class Evolution {
+
     private String definitionFile;
     private int dimension;
     private double[][] cities;
 
     private GreedyPackingPlan greedy;
+    private ParetoFrontsGenerator paretoGenerator;
 
     private int popSize;
     private int numOfGeners;
@@ -70,6 +72,7 @@ public class Evolution {
                 }
                 Point ideal = countPoint(true, distances, dimension, items);
                 Point nadir = countPoint(false, distances, dimension, items);
+                paretoGenerator = new ParetoFrontsGenerator(ideal, nadir);
             }
             greedy = new GreedyPackingPlan(minSpeed, maxSpeed, capacity, dimension, distances, items);
         } catch (FileNotFoundException fnfe) {
@@ -78,6 +81,33 @@ public class Evolution {
             System.out.println("An error has occurred while reading data: " + e);
         }
 
+    }
+
+    public void evolve() {
+        initialize();
+        for(int generation = 1; generation < numOfGeners; generation++) {
+            ArrayList<Individual> offspring = new ArrayList<>();
+            overridePopulation(paretoGenerator.generateFronts(population));//czy to jest potrzebne, czy lepiej od razu metoda powinna zwracac liste
+            while(offspring.size() < popSize) {
+                Individual[] children = matingPool();
+                offspring.add(children[0]);
+                if(offspring.size() < popSize) {
+                    offspring.add(children[1]);
+                }
+            }
+            population.addAll(offspring);
+            overridePopulation(paretoGenerator.generateFronts(population));
+        }
+    }
+
+    //at this point population is already filled out with rank and crowding distance
+    private Individual[] matingPool() {
+        Individual parent1 = tournament();
+        Individual parent2 = tournament();
+        Individual[] children = crossingOver(parent1.getRoute(), parent2.getRoute());
+        children[0].mutation();
+        children[1].mutation();
+        return children;
     }
 
     //for time as y and wage as x
@@ -122,6 +152,14 @@ public class Evolution {
         return point;
     }
 
+    private void overridePopulation(ArrayList<ArrayList<Individual>> fronts) {
+        ArrayList<Individual> populationWithRank = new ArrayList<>();
+        for(int i = 0; i < fronts.size(); i++) {
+            populationWithRank.addAll(fronts.get(i));
+        }
+        population = populationWithRank;
+    }
+
     private double getNumber(String line) {
         Pattern p = Pattern.compile("\\d+(\\.\\d+)?");
         Matcher m = p.matcher(line);
@@ -152,8 +190,8 @@ public class Evolution {
         return ind;
     }
 
-    //POBIERAM CROWDINGDISTANCE I RANK Z POPULACJI, GDZIE NIE SA WPISANE
     public Individual tournament() {
+
         Individual bestIndividual = population.get(0);//just any individual to initialize
         int bestRank = Integer.MAX_VALUE;
         Random rand = new Random();
@@ -174,7 +212,7 @@ public class Evolution {
         return bestIndividual;
     }
 
-    public int[][] crossingOver(int[] parent1, int[] parent2) {
+    public Individual[] crossingOver(int[] parent1, int[] parent2) {
         int[] child1 = new int[parent1.length];
         int[] child2 = new int[parent1.length];
         if(Math.random() < crossProb) {
@@ -225,7 +263,7 @@ public class Evolution {
             child1 = parent1;
             child2 = parent2;
         }
-        return new int[][] {child1, child2};
+        return new Individual[] {new Individual(child1, mutProb), new Individual(child2, mutProb)};
     }
 
     private double[][] createDistancesArray() {
@@ -244,5 +282,9 @@ public class Evolution {
             }
         }
         return distances;
+    }
+
+    private String statistics() {
+
     }
 }
