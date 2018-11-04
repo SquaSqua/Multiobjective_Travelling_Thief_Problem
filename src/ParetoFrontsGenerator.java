@@ -1,33 +1,32 @@
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Collections;
 
-public class ParetoFrontsGenerator {
+class ParetoFrontsGenerator {
 
-    Point ideal, nadir;
+    private Point ideal, nadir;
 
-    private ArrayList<ArrayList<Individual>> paretoFronts = new ArrayList<>();
-    public ParetoFrontsGenerator(Point ideal, Point nadir) {
+    ParetoFrontsGenerator(Point ideal, Point nadir) {
         this.ideal = ideal;
         this.nadir = nadir;
     }
 
     //each calling overrides last set paretoFronts
-    public ArrayList<ArrayList<Individual>> generateFronts(ArrayList<Individual> group) {
-
-        paretoFronts = new ArrayList<>();
+    private ArrayList<ArrayList<Individual>> generateFronts(ArrayList<Individual> population) {
+        ArrayList<ArrayList<Individual>> paretoFronts = new ArrayList<>();
         paretoFronts.add(new ArrayList<>());
-        for(int i = 0; i < group.size(); i++) {
+        for(int i = 0; i < population.size(); i++) {
             for (int j = 0; j < paretoFronts.size(); j++) {
                 ArrayList<Individual> currentFront = paretoFronts.get(j);
                 if (currentFront.size() == 0) {
-                    currentFront.add(group.get(i));
+                    currentFront.add(population.get(i));
                     break;
                 } else {
                     for (int k = 0; k < currentFront.size(); k++) {
-                        int compared = group.get(i).compareTo(currentFront.get(k));
+                        int compared = population.get(i).compareTo(currentFront.get(k));
                         if ((compared == 0) && (k == currentFront.size() - 1)) {
-                            currentFront.add(group.get(i));
-                            if(i < group.size() - 1) {
+                            currentFront.add(population.get(i));
+                            if(i < population.size() - 1) {
                                 i++;
                                 j = -1;
                             }else {
@@ -37,21 +36,21 @@ public class ParetoFrontsGenerator {
                         } else if (compared == -1) {
                             //zamiana miejsc
                             ArrayList<Individual> betterFront = new ArrayList<>();
-                            betterFront.add(group.get(i));
+                            betterFront.add(population.get(i));
                             for(int z = 0; z < k; ) {
                                 betterFront.add(currentFront.get(z));
                                 currentFront.remove(z);
                                 k--;
                             }
                             for(int z = 1; z < currentFront.size(); z++) {
-                                if(group.get(i).compareTo(currentFront.get(z)) == 0) {
+                                if(population.get(i).compareTo(currentFront.get(z)) == 0) {
                                     betterFront.add(currentFront.get(z));
                                     currentFront.remove(z);
                                     z--;
                                 }
                             }
                             paretoFronts.add(j, betterFront);
-                            if(i < group.size() - 1) {
+                            if(i < population.size() - 1) {
                                 i++;
                                 j = -1;
                             }else {
@@ -62,8 +61,8 @@ public class ParetoFrontsGenerator {
                             //nowy front
                             if (paretoFronts.size() < j + 2) {
                                 paretoFronts.add(new ArrayList<>());
-                                paretoFronts.get(j + 1).add(group.get(i));
-                                if(i < group.size() - 1) {
+                                paretoFronts.get(j + 1).add(population.get(i));
+                                if(i < population.size() - 1) {
                                     i++;
                                     j = -1;
                                 }else {
@@ -79,12 +78,19 @@ public class ParetoFrontsGenerator {
                 }
             }
         }
-        assignRank();
-        crowdingDistanceSetter();
         return paretoFronts;
     }
 
-    private void assignRank() {
+    ArrayList<ArrayList<Individual>> generateFrontsWithAssignments(ArrayList<Individual> population) {
+        ArrayList<ArrayList<Individual>> paretoFronts;
+        paretoFronts = generateFronts(population);
+        assignRank(paretoFronts);
+        crowdingDistanceSetter(paretoFronts);
+
+        return paretoFronts;
+    }
+
+    private void assignRank(ArrayList<ArrayList<Individual>> paretoFronts) {
         for(int i = 0; i < paretoFronts.size(); i++) {
             for(int j = 0; j < paretoFronts.get(i).size(); j++) {
                 paretoFronts.get(i).get(j).setRank(i);
@@ -92,57 +98,49 @@ public class ParetoFrontsGenerator {
         }
     }
 
-    private void objectiveSorting() {
+    private void objectiveSorting(ArrayList<ArrayList<Individual>> paretoFronts) {
         for(int i = 0; i < paretoFronts.size(); i++) {
-            Collections.sort(paretoFronts.get(i), new ObjectiveFrontComparator());
+            paretoFronts.get(i).sort(new ObjectiveFrontComparator());
         }
     }
 
-    private void crowdingDistanceSetter() {
-        objectiveSorting();
-        for(int i = 0; i < paretoFronts.size(); i++) {
-            paretoFronts.get(i).get(0).setCrowdingDistance(Double.POSITIVE_INFINITY);
-            paretoFronts.get(i).get(paretoFronts.get(i).size() - 1).setCrowdingDistance(Double.POSITIVE_INFINITY);
+    private void crowdingDistanceSetter(ArrayList<ArrayList<Individual>> paretoFronts) {
+        objectiveSorting(paretoFronts);
+        for (ArrayList<Individual> paretoFront : paretoFronts) {
+            paretoFront.get(0).setCrowdingDistance(Double.POSITIVE_INFINITY);
+            paretoFront.get(paretoFront.size() - 1).setCrowdingDistance(Double.POSITIVE_INFINITY);
 
-            for(int j = 1; j < paretoFronts.get(i).size() - 1; j++) {
-                Individual currentInd = paretoFronts.get(i).get(j);
-                double a = Math.abs(paretoFronts.get(i).get(j + 1).getFitnessTime()
-                        - paretoFronts.get(i).get(j - 1).getFitnessTime());
-                double b = Math.abs(paretoFronts.get(i).get(0).getFitnessWage()
-                        - paretoFronts.get(i).get(paretoFronts.get(i).size() - 1).getFitnessWage());
+            for (int j = 1; j < paretoFront.size() - 1; j++) {
+                Individual currentInd = paretoFront.get(j);
+                double a = Math.abs(paretoFront.get(j + 1).getFitnessTime()
+                        - paretoFront.get(j - 1).getFitnessTime());
+                double b = Math.abs(paretoFront.get(0).getFitnessWage()
+                        - paretoFront.get(paretoFront.size() - 1).getFitnessWage());
                 currentInd.setCrowdingDistance(a * b);
             }
         }
     }
 
-    public String printPF(ArrayList<Individual> a, StringBuilder sB) {
-        for(Individual i : a) {
-            sB.append(i.getFitnessTime() + ", ");
-            sB.append(i.getFitnessWage() + ", ");
-            sB.append("\n");
-        }
-        return sB.toString();
+    public String ED_measure(ArrayList<ArrayList<Individual>> paretoFronts) {//todo naprawic
+//        double sumED = 0;
+//        paretoFronts.get(0).sort(new ObjectiveFrontComparator());//docelowo archive
+//        for(int i = 0; i < paretoFronts.size(); i++) {
+//            Individual ind = paretoFronts.get(i);
+//            sumED += Math.round(Math.sqrt(Long.valueOf((int)((ind.getFitnessTime() - ideal.x)
+//                    * (ind.getFitnessTime() - ideal.x) + (ind.getFitnessWage() - ideal.y)
+//                    * (ind.getFitnessWage() - ideal.y)))));
+//        }
+//        sumED = (sumED / paretoFronts.size());
+
+        return /*Math.round(sumED) + */"";
     }
 
-    public String ED_measure(ArrayList<Individual> group) {
-        double sumED = 0;
-        for(int i = 0; i < group.size(); i++) {
-            Individual ind = group.get(i);
-            sumED += Math.round(Math.sqrt(Long.valueOf((int)((ind.getFitnessTime() - ideal.x)
-                    * (ind.getFitnessTime() - ideal.x) + (ind.getFitnessWage() - ideal.y)
-                    * (ind.getFitnessWage() - ideal.y)))));
-        }
-        sumED = (sumED / group.size());
-
-        return Math.round(sumED) + "";
-    }
-
-    public String PFS_measure() {
+    public String PFS_measure(ArrayList<ArrayList<Individual>> paretoFronts) {
         return paretoFronts.get(0).size() + "";//docelowo archive
     }
 
-    public double HV_measure() {
-        Collections.sort(paretoFronts.get(0), new ObjectiveFrontComparator());//docelowo archive
+    public double HV_measure(ArrayList<ArrayList<Individual>> paretoFronts) {
+        paretoFronts.get(0).sort(new ObjectiveFrontComparator());//docelowo archive
         Long hyperVolume = 0L;
         double lastY = nadir.y;
         for(int i = 0; i < paretoFronts.get(0).size(); i++) {
@@ -151,9 +149,5 @@ public class ParetoFrontsGenerator {
             lastY = paretoFronts.get(0).get(i).getFitnessWage();
         }
         return hyperVolume;
-    }
-
-    public ArrayList<ArrayList<Individual>> getParetoFronts() {
-        return paretoFronts;
     }
 }

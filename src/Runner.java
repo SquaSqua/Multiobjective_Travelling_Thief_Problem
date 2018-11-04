@@ -1,11 +1,12 @@
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;
+import java.util.ArrayList;
 
 public class Runner {
     public static void main(String[] args) {
 
-        Evolution population = new Evolution("src/definitionFiles/easy_0.ttp", 10, 2,
-                2, 0, 0);
+        Evolution population = new Evolution("src/definitionFiles/easy_0.ttp", 50, 50,
+                3, 0.5, 0.02);
         String results = "results.csv";
         try
         {

@@ -1,11 +1,11 @@
 import java.util.Random;
 
-public class Individual {
+class Individual {
 
     private int[] route;
     private int[] packingPlan;
-    private int fitnessTime;
-    private double fitnessWage;
+    private double fitnessTime;
+    private int fitnessWage;
 
     private double mutProb;
 
@@ -13,13 +13,13 @@ public class Individual {
     private double crowdingDistance;
     private int rank;
 
-    public Individual(int[] route, double mutProb) {
+    Individual(int[] route, double mutProb) {
         this.route = route;
         this.mutProb = mutProb;
         packingPlan = null;
     }
 
-    public void mutation() {
+    void mutation() {
         for(int i = 0; i < route.length - 2; i++) {
             if(Math.random() < mutProb) {
                 int swapIndex = new Random().nextInt(route.length - 1);
@@ -31,56 +31,60 @@ public class Individual {
         }
     }
 
-    public int compareTo(Individual o) {
+    int compareTo(Individual o) {
         return (int) Math.signum(Math.signum(fitnessTime - o.fitnessTime) + Math.signum(fitnessWage - o.fitnessWage));
     }
 
 
     //getters
-    public int[] getRoute() {
+    int[] getRoute() {
         return route;
     }
 
-    public int[] getPackingPlan() {
+    int[] getPackingPlan() {
         return packingPlan;
     }
 
-    public int getFitnessTime() {
+    double getFitnessTime() {
         return fitnessTime;
     }
 
-    public double getFitnessWage() {
+    int getFitnessWage() {
         return fitnessWage;
     }
 
-    public double getCrowdingDistance() {
+    double getCrowdingDistance() {
         return crowdingDistance;
     }
 
-    public int getRank() {
+    int getRank() {
         return rank;
     }
 
 
     //setters
-
-    public void setPackingPlan(int[] packingPlan) {
+    void setPackingPlan(int[] packingPlan) {
         this.packingPlan = packingPlan;
     }
 
-    public void setFitnessTime(int fitnessTime) {
+    void setPackingPlanAndFitness(int[] route, GreedyPackingPlan greedy) {
+        greedy.settlePackingPlan(this);
+        greedy.setFitnessForIndividual(this);
+    }
+
+    void setFitnessTime(double fitnessTime) {
         this.fitnessTime = fitnessTime;
     }
 
-    public void setFitnessWage(double fitnessWage) {
+    void setFitnessWage(int fitnessWage) {
         this.fitnessWage = fitnessWage;
     }
 
-    public void setCrowdingDistance(double crowdingDistance) {
+    void setCrowdingDistance(double crowdingDistance) {
         this.crowdingDistance = crowdingDistance;
     }
 
-    public void setRank(int rank) {
+    void setRank(int rank) {
         this.rank = rank;
     }
 

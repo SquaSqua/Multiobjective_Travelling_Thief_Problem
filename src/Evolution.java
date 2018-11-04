@@ -1,14 +1,11 @@
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Random;
-import java.util.StringTokenizer;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class Evolution {
+class Evolution {
 
     private String definitionFile;
     private int dimension;
@@ -25,7 +22,13 @@ public class Evolution {
 
     private ArrayList<Individual> population = new ArrayList<>();
 
-    public Evolution(String definitionFile, int popSize, int numOfGeners, int tournamentSize, double crossProb, double mutProb) {
+    //just for a try
+    private String measures = "", firstPop = "", lastPop = "";
+    private StringBuilder sBMeasures = new StringBuilder(measures);
+    private StringBuilder sBfirstPop = new StringBuilder(firstPop);
+    private StringBuilder sBlastPop = new StringBuilder(lastPop);
+
+    Evolution(String definitionFile, int popSize, int numOfGeners, int tournamentSize, double crossProb, double mutProb) {
         this.definitionFile = definitionFile;
         readParameters();
 
@@ -39,7 +42,6 @@ public class Evolution {
     private void readParameters() {
         BufferedReader reader;
         int[][] items;
-        double[][] distances = createDistancesArray();
         int capacity;
         int numOfItems;
         double minSpeed;
@@ -65,6 +67,7 @@ public class Evolution {
                 }
             }
             reader.readLine();
+            double[][] distances = createDistancesArray();
             for (int i = 0; i < numOfItems; i++) {//filling out items array
                 StringTokenizer st = new StringTokenizer(reader.readLine(), " \t");
                 for(int j = 0; j < 4; j++) {
@@ -83,21 +86,56 @@ public class Evolution {
 
     }
 
-    public void evolve() {
+    String evolve() {
+
         initialize();
+        sBfirstPop.append(printPopulation(sBfirstPop));
         for(int generation = 1; generation < numOfGeners; generation++) {
-            ArrayList<Individual> offspring = new ArrayList<>();
-            overridePopulation(paretoGenerator.generateFronts(population));//czy to jest potrzebne, czy lepiej od razu metoda powinna zwracac liste
-            while(offspring.size() < popSize) {
-                Individual[] children = matingPool();
-                offspring.add(children[0]);
-                if(offspring.size() < popSize) {
-                    offspring.add(children[1]);
+            paretoGenerator.generateFrontsWithAssignments(population);
+            population.addAll(generateOffspring());
+            ArrayList<ArrayList<Individual>> pareto = paretoGenerator.generateFrontsWithAssignments(population);
+            statistics(pareto);//todo which statistics should I print?
+            population = chooseNextGeneration(pareto);
+        }
+        sBfirstPop.append(printPopulation(sBlastPop));
+        sBMeasures.append("\n" + "First population");
+        sBMeasures.append(sBfirstPop);
+        sBMeasures.append("\n" + "Last population");
+        sBMeasures.append(sBlastPop);
+        measures = sBMeasures.toString();
+        return measures;
+    }
+
+    private ArrayList<Individual> chooseNextGeneration(ArrayList<ArrayList<Individual>> pareto) {
+        ArrayList<Individual> nextGeneration = new ArrayList<>();
+        while(nextGeneration.size() < popSize) {
+            if(pareto.get(0).size() <= popSize - nextGeneration.size()) {
+                nextGeneration.addAll(pareto.get(0));
+                pareto.remove(0);
+            }
+            else {
+                ArrayList<Individual> firstFront = pareto.get(0);
+                firstFront.sort(new CrowdingDistanceComparator());
+                for(Individual ind : firstFront) {
+                    if(firstFront.size() <= popSize - nextGeneration.size()) {
+                        nextGeneration.add(ind);
+                    }
                 }
             }
-            population.addAll(offspring);
-            overridePopulation(paretoGenerator.generateFronts(population));
         }
+        return nextGeneration;
+    }
+
+    private ArrayList<Individual> generateOffspring() {
+        ArrayList<Individual> offspring = new ArrayList<>();
+        while(offspring.size() < popSize) {
+            Individual[] children = matingPool();
+            offspring.add(children[0]);
+            if(offspring.size() < popSize) {
+                offspring.add(children[1]);
+            }
+        }
+        return offspring;
     }
 
     //at this point population is already filled out with rank and crowding distance
@@ -107,6 +145,9 @@ public class Evolution {
         Individual[] children = crossingOver(parent1.getRoute(), parent2.getRoute());
         children[0].mutation();
         children[1].mutation();
+        children[0].setPackingPlanAndFitness(children[0].getRoute(), greedy);
+        children[1].setPackingPlanAndFitness(children[1].getRoute(), greedy);
+
         return children;
     }
 
@@ -125,9 +166,9 @@ public class Evolution {
                     }
                 }
             }
-            for(int i = 0; i < items.length; i++) {
-                if(wage < items[i][1]) {
-                    wage = items[i][1];
+            for (int[] item : items) {
+                if (wage < item[1]) {
+                    wage = item[1];
                 }
             }
             point = new Point(wage * items.length, time * dimension);
@@ -142,22 +183,14 @@ public class Evolution {
                     }
                 }
             }
-            for(int i = 0; i < items.length; i++) {
-                if(wage < items[i][1]) {
-                    wage = items[i][1];
+            for (int[] item : items) {
+                if (wage > item[1]) {
+                    wage = item[1];
                 }
             }
             point = new Point(wage * items.length, time * dimension);
         }
         return point;
-    }
-
-    private void overridePopulation(ArrayList<ArrayList<Individual>> fronts) {
-        ArrayList<Individual> populationWithRank = new ArrayList<>();
-        for(int i = 0; i < fronts.size(); i++) {
-            populationWithRank.addAll(fronts.get(i));
-        }
-        population = populationWithRank;
     }
 
     private double getNumber(String line) {
@@ -167,13 +200,13 @@ public class Evolution {
         return Double.parseDouble(m.group());
     }
 
-    public void initialize() {
+    private void initialize() {
         for (int i = 0; i < popSize; i++) {
             population.add(generateRandomInd());
         }
     }
 
-    public Individual generateRandomInd() {
+    private Individual generateRandomInd() {
         int[] route = new int[dimension + 1];
         ArrayList<Integer> routeList = new ArrayList<>();
         for (int i = 0; i < dimension; i++) {
@@ -185,12 +218,11 @@ public class Evolution {
         }
         route[dimension] = route[0];
         Individual ind = new Individual(route, mutProb);
-        ind.setPackingPlan(route);
-
+        ind.setPackingPlanAndFitness(route, greedy);
         return ind;
     }
 
-    public Individual tournament() {
+    private Individual tournament() {
 
         Individual bestIndividual = population.get(0);//just any individual to initialize
         int bestRank = Integer.MAX_VALUE;
@@ -204,7 +236,6 @@ public class Evolution {
             }
             else if(rank == bestRank) {
                 if(bestIndividual.getCrowdingDistance() < individual.getCrowdingDistance()) {
-                    bestRank = rank;
                     bestIndividual = individual;
                 }
             }
@@ -212,7 +243,7 @@ public class Evolution {
         return bestIndividual;
     }
 
-    public Individual[] crossingOver(int[] parent1, int[] parent2) {
+    private Individual[] crossingOver(int[] parent1, int[] parent2) {
         int[] child1 = new int[parent1.length];
         int[] child2 = new int[parent1.length];
         if(Math.random() < crossProb) {
@@ -263,7 +294,10 @@ public class Evolution {
             child1 = parent1;
             child2 = parent2;
         }
-        return new Individual[] {new Individual(child1, mutProb), new Individual(child2, mutProb)};
+        return new Individual[] {
+                new Individual(child1, mutProb),
+                new Individual(child2, mutProb)
+        };
     }
 
     private double[][] createDistancesArray() {
@@ -284,7 +318,23 @@ public class Evolution {
         return distances;
     }
 
-    private String statistics() {
+    private void statistics(ArrayList<ArrayList<Individual>> pareto) {
+        sBMeasures.append(paretoGenerator.ED_measure(pareto)).append(", ")
+                .append(paretoGenerator.PFS_measure(pareto)).append(", ")
+                .append(paretoGenerator.HV_measure(pareto));
+        sBMeasures.append("\n");
+    }
 
+    private String printPopulation(StringBuilder sB) {
+        int currentRank = 0;
+        for(Individual i : population) {
+            if(i.getRank() != currentRank) {
+                currentRank++;
+                sB.append("\n");
+            }
+            sB.append(i.getFitnessTime()).append(", ").append(i.getFitnessWage()).append(", ");
+            sB.append("\n");
+        }
+        return sB.toString();
     }
 }
