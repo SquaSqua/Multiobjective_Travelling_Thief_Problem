@@ -74,6 +74,7 @@ class GreedyPackingPlan {
     // t - time of carrying this one item with no more items from the point it was placed to,
     //tb - basic time of travel from the chosen point with empty knapsack
     private void countGain(int[] route) {
+        gainOfItems = new ArrayList<>();
         for(int i = 0; i < items.length; i++) {
             int[] currentRow = items[i];
             gainOfItems.add(new double[] {i, currentRow[1] /

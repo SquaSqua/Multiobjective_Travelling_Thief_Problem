@@ -23,7 +23,7 @@ class Evolution {
     private ArrayList<Individual> population = new ArrayList<>();
 
     //just for a try
-    private String measures = "", firstPop = "", lastPop = "";
+    private String measures = "", firstPop = "\nFirst population\n", lastPop = "\nLast population\n";
     private StringBuilder sBMeasures = new StringBuilder(measures);
     private StringBuilder sBfirstPop = new StringBuilder(firstPop);
     private StringBuilder sBlastPop = new StringBuilder(lastPop);
@@ -89,19 +89,18 @@ class Evolution {
     String evolve() {
 
         initialize();
-        sBfirstPop.append(printPopulation(sBfirstPop));
         for(int generation = 1; generation < numOfGeners; generation++) {
             paretoGenerator.generateFrontsWithAssignments(population);
             population.addAll(generateOffspring());
             ArrayList<ArrayList<Individual>> pareto = paretoGenerator.generateFrontsWithAssignments(population);
             statistics(pareto);//todo which statistics should I print?
             population = chooseNextGeneration(pareto);
+            if(generation == 1) {
+                printPopulation(sBfirstPop);
+            }
         }
         sBfirstPop.append(printPopulation(sBlastPop));
-        sBMeasures.append("\n" + "First population");
         sBMeasures.append(sBfirstPop);
-        sBMeasures.append("\n" + "Last population");
-        sBMeasures.append(sBlastPop);
         measures = sBMeasures.toString();
         return measures;
     }
@@ -117,7 +116,7 @@ class Evolution {
                 ArrayList<Individual> firstFront = pareto.get(0);
                 firstFront.sort(new CrowdingDistanceComparator());
                 for(Individual ind : firstFront) {
-                    if(firstFront.size() <= popSize - nextGeneration.size()) {
+                    if(nextGeneration.size() < popSize) {
                         nextGeneration.add(ind);
                     }
                 }
@@ -142,12 +141,11 @@ class Evolution {
     private Individual[] matingPool() {
         Individual parent1 = tournament();
         Individual parent2 = tournament();
-        Individual[] children = crossingOver(parent1.getRoute(), parent2.getRoute());
-        children[0].mutation();
-        children[1].mutation();
-        children[0].setPackingPlanAndFitness(children[0].getRoute(), greedy);
-        children[1].setPackingPlanAndFitness(children[1].getRoute(), greedy);
-
+        Individual[] children = crossOver(parent1.getRoute(), parent2.getRoute());
+//        children[0].setPackingPlanAndFitness(greedy);//tu cos sie zmienia
+//        System.out.println(Arrays.toString(children[0].getPackingPlan()));
+        children[0].mutation(greedy);
+        children[1].mutation(greedy);
         return children;
     }
 
@@ -218,7 +216,7 @@ class Evolution {
         }
         route[dimension] = route[0];
         Individual ind = new Individual(route, mutProb);
-        ind.setPackingPlanAndFitness(route, greedy);
+        ind.setPackingPlanAndFitness(greedy);
         return ind;
     }
 
@@ -243,7 +241,7 @@ class Evolution {
         return bestIndividual;
     }
 
-    private Individual[] crossingOver(int[] parent1, int[] parent2) {
+    private Individual[] crossOver(int[] parent1, int[] parent2) {
         int[] child1 = new int[parent1.length];
         int[] child2 = new int[parent1.length];
         if(Math.random() < crossProb) {
@@ -291,8 +289,10 @@ class Evolution {
             child2[parent2.length - 1] = child2[0];
         }
         else {
-            child1 = parent1;
-            child2 = parent2;
+            for(int i = 0; i < child1.length; i++) {
+                child1[i] = parent1[i];
+                child2[i] = parent2[i];
+            }
         }
         return new Individual[] {
                 new Individual(child1, mutProb),
@@ -332,7 +332,8 @@ class Evolution {
                 currentRank++;
                 sB.append("\n");
             }
-            sB.append(i.getFitnessTime()).append(", ").append(i.getFitnessWage()).append(", ");
+            sB.append(i.getFitnessTime()).append(", ").append(i.getFitnessWage()).append(", ")
+                    .append(Arrays.toString(i.getRoute())).append(", ").append(Arrays.toString(i.getPackingPlan()));
             sB.append("\n");
         }
         return sB.toString();

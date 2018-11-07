@@ -132,7 +132,7 @@ class ParetoFrontsGenerator {
 //        }
 //        sumED = (sumED / paretoFronts.size());
 
-        return /*Math.round(sumED) + */"";
+        return /*Math.round(sumED) + */"Tu bedzie ED";
     }
 
     public String PFS_measure(ArrayList<ArrayList<Individual>> paretoFronts) {

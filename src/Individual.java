@@ -1,3 +1,4 @@
+import java.util.Arrays;
 import java.util.Random;
 
 class Individual {
@@ -19,7 +20,7 @@ class Individual {
         packingPlan = null;
     }
 
-    void mutation() {
+    void mutation(GreedyPackingPlan greedy) {
         for(int i = 0; i < route.length - 2; i++) {
             if(Math.random() < mutProb) {
                 int swapIndex = new Random().nextInt(route.length - 1);
@@ -29,6 +30,8 @@ class Individual {
             }
             route[route.length - 1] = route[0];
         }
+        setPackingPlanAndFitness(greedy);
+//        System.out.println(Arrays.toString(packingPlan));
     }
 
     int compareTo(Individual o) {
@@ -67,7 +70,7 @@ class Individual {
         this.packingPlan = packingPlan;
     }
 
-    void setPackingPlanAndFitness(int[] route, GreedyPackingPlan greedy) {
+    void setPackingPlanAndFitness(GreedyPackingPlan greedy) {
         greedy.settlePackingPlan(this);
         greedy.setFitnessForIndividual(this);
     }
