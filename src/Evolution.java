@@ -310,7 +310,7 @@ class Evolution {
         int[] ch1 = new int[p1.length];
         int[] ch2 = new int[p1.length];
 
-        if(Math.random() < mutProb) {
+        if(Math.random() < crossProb) {
             int[] route1 = new int[p1.length - 1];
             int[] route2 = new int[p1.length - 1];
             for(int i = 0; i < route1.length; i++) {
@@ -329,13 +329,13 @@ class Evolution {
 
             boolean isSwapTurn = false;
             while(true) {
-                assingGens(isSwapTurn, currentInd, route1, route2, child1, child2);
+                assignGens(isSwapTurn, currentInd, route1, route2, child1, child2);
                 if(route1[currentInd] == route2[currentInd]) {
                     isSwapTurn = !isSwapTurn;
                 }
                 currentInd = findIndexOfaValue(route2[currentInd], route1);
                 if(route2[currentInd] == beginningValue) {
-                    assingGens(isSwapTurn, currentInd, route1, route2, child1, child2);
+                    assignGens(isSwapTurn, currentInd, route1, route2, child1, child2);
                     currentInd = findFirstEmpty(child1);
                     if(currentInd == -1) {
                         break;
@@ -359,7 +359,7 @@ class Evolution {
                 };
     }
 
-    private void assingGens(boolean isSwapTurn, int currentInd, int[] route1, int[] route2, int[] child1, int[] child2) {
+    private void assignGens(boolean isSwapTurn, int currentInd, int[] route1, int[] route2, int[] child1, int[] child2) {
         if(!isSwapTurn) {
             child1[currentInd] = route1[currentInd];
             child2[currentInd] = route2[currentInd];

@@ -75,11 +75,11 @@ class GreedyPackingPlan {
             gainOfItems.add(new double[] {i, currentRow[1] /
                     (currentRow[2] * countTime(route, currentRow[3], countSpeed(currentRow[2])))});
         }
-//        gainOfItems.sort((double[] o1, double[] o2) ->
-//                o2[1] - o1[1] < 0 ? -1 : o2[1] > 0 ? 1 : 0);
-//        for(double[] i : gainOfItems) {
+        gainOfItems.sort((double[] o1, double[] o2) ->
+                o2[1] - o1[1] < 0 ? -1 : o2[1] > 0 ? 1 : 0);
+            for(double[] i : gainOfItems) {
 //            System.out.println(i[0] + ": " + i[1]);
-//        }//just for debugging
+        }//just for debugging
 
         return gainOfItems;
     }

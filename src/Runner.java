@@ -10,8 +10,8 @@ public class Runner {
     public static void main(String[] args) {
 
         long start = System.currentTimeMillis();
-        Evolution population = new Evolution("src/definitionFiles/medium_3.ttp", 200, 100,
-                3, 0.5, 1);
+        Evolution population = new Evolution("src/definitionFiles/hard_3.ttp", 200, 100,
+                3, 0.5, 0.2);
 
         Date date = new Date();
         String dateAndTime = date.getMonth() + "_"  + date.getDay()
