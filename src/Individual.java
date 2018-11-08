@@ -28,8 +28,9 @@ class Individual {
                 route[i] = route[swapIndex];
                 route[swapIndex] = temp;
             }
-            route[route.length - 1] = route[0];
         }
+        route[route.length - 1] = route[0];
+
         setPackingPlanAndFitness(greedy);
 //        System.out.println(Arrays.toString(packingPlan));
     }

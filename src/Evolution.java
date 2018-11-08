@@ -11,7 +11,8 @@ class Evolution {
     private int dimension;
     private double[][] cities;
 
-    private GreedyPackingPlan greedy;
+//    private GreedyPackingPlan greedy;
+    public GreedyPackingPlan greedy;
     private ParetoFrontsGenerator paretoGenerator;
 
     private int popSize;
@@ -141,7 +142,7 @@ class Evolution {
     private Individual[] matingPool() {
         Individual parent1 = tournament();
         Individual parent2 = tournament();
-        Individual[] children = crossOver(parent1.getRoute(), parent2.getRoute());
+        Individual[] children = cX(parent1, parent2);
 //        children[0].setPackingPlanAndFitness(greedy);//tu cos sie zmienia
 //        System.out.println(Arrays.toString(children[0].getPackingPlan()));
         children[0].mutation(greedy);
@@ -241,63 +242,163 @@ class Evolution {
         return bestIndividual;
     }
 
-    private Individual[] crossOver(int[] parent1, int[] parent2) {
-        int[] child1 = new int[parent1.length];
-        int[] child2 = new int[parent1.length];
-        if(Math.random() < crossProb) {
-            int crossPoint = new Random().nextInt(parent1.length);
-            for(int i = 0; i < crossPoint; i++) {
-                child1[i] = parent1[i];
-                child2[i] = parent2[i];
-            }
-            //rest for parent1
-            boolean used = false;
-            int from = 0;
-            for(int empty = crossPoint; empty < child1.length - 1;) {
-                for(int j = 0; j < empty; j++) {
-                    if(child1[j] == parent2[from]){
-                        used = true;
-                        break;
-                    }
-                }
-                if(!used) {
-                    child1[empty] = parent2[from];
-                    empty++;
-                }
-                used = false;
-                from++;
-            }
-            child1[parent1.length - 1] = child1[0];
+//    private Individual[] crossOver(Individual parent1, Individual parent2) {
+//        int[] parent1Route = parent1.getRoute();
+//        int[] parent2Route = parent2.getRoute();
+//
+//        int[] child1 = new int[parent1Route.length];
+//        int[] child2 = new int[parent1Route.length];
+//        if(Math.random() < crossProb) {
+//            int crossPoint = new Random().nextInt(parent1Route.length);
+//            for(int i = 0; i < crossPoint; i++) {
+//                child1[i] = parent1Route[i];
+//                child2[i] = parent2Route[i];
+//            }
+//            //rest for parent1
+//            boolean used = false;
+//            int from = 0;
+//            for(int empty = crossPoint; empty < child1.length - 1;) {
+//                for(int j = 0; j < empty; j++) {
+//                    if(child1[j] == parent2Route[from]){
+//                        used = true;
+//                        break;
+//                    }
+//                }
+//                if(!used) {
+//                    child1[empty] = parent2Route[from];
+//                    empty++;
+//                }
+//                used = false;
+//                from++;
+//            }
+//            child1[parent1Route.length - 1] = child1[0];
+//
+//            //rest for parent2
+//            used = false;
+//            from = 0;
+//            for(int empty = crossPoint; empty < child2.length - 1;) {
+//                for(int j = 0; j < empty; j++) {
+//                    if(child2[j] == parent1Route[from]){
+//                        used = true;
+//                        break;
+//                    }
+//                }
+//                if(!used) {
+//                    child2[empty] = parent1Route[from];
+//                    empty++;
+//                }
+//                used = false;
+//                from++;
+//            }
+//            child2[parent2Route.length - 1] = child2[0];
+//        }
+//        else {
+//            for(int i = 0; i < child1.length; i++) {
+//                child1[i] = parent1Route[i];
+//                child2[i] = parent2Route[i];
+//            }
+//        }
+//        return new Individual[] {
+//                new Individual(child1, mutProb),
+//                new Individual(child2, mutProb)
+//        };
+//    }
 
-            //rest for parent2
-            used = false;
-            from = 0;
-            for(int empty = crossPoint; empty < child2.length - 1;) {
-                for(int j = 0; j < empty; j++) {
-                    if(child2[j] == parent1[from]){
-                        used = true;
+    public Individual[] cX(Individual parent1, Individual parent2) {
+        int[] p1 = parent1.getRoute();
+        int[] p2 = parent2.getRoute();
+        int[] ch1 = new int[p1.length];
+        int[] ch2 = new int[p1.length];
+
+        if(Math.random() < mutProb) {
+            int[] route1 = new int[p1.length - 1];
+            int[] route2 = new int[p1.length - 1];
+            for(int i = 0; i < route1.length; i++) {
+                route1[i] = p1[i];
+                route2[i] = p2[i];
+            }
+            int[] child1 = new int[route1.length];
+            int[] child2 = new int[route2.length];
+
+            for(int i = 0; i < child1.length; i++) {
+                child1[i] = -1;
+                child2[i] = -1;
+            }
+            int beginningValue = route1[0];
+            int currentInd = 0;
+
+            boolean isSwapTurn = false;
+            while(true) {
+                assingGens(isSwapTurn, currentInd, route1, route2, child1, child2);
+                if(route1[currentInd] == route2[currentInd]) {
+                    isSwapTurn = !isSwapTurn;
+                }
+                currentInd = findIndexOfaValue(route2[currentInd], route1);
+                if(route2[currentInd] == beginningValue) {
+                    assingGens(isSwapTurn, currentInd, route1, route2, child1, child2);
+                    currentInd = findFirstEmpty(child1);
+                    if(currentInd == -1) {
                         break;
                     }
+                    beginningValue = route1[currentInd];
+                    isSwapTurn = !isSwapTurn;
                 }
-                if(!used) {
-                    child2[empty] = parent1[from];
-                    empty++;
-                }
-                used = false;
-                from++;
             }
-            child2[parent2.length - 1] = child2[0];
+            ch1 = addLastCity(child1);
+            ch2 = addLastCity(child2);
         }
         else {
-            for(int i = 0; i < child1.length; i++) {
-                child1[i] = parent1[i];
-                child2[i] = parent2[i];
+            for(int i = 0; i < ch1.length; i++) {
+                ch1[i] = p1[i];
+                ch2[i] = p2[i];
             }
         }
-        return new Individual[] {
-                new Individual(child1, mutProb),
-                new Individual(child2, mutProb)
-        };
+        return new Individual[]{
+                new Individual(ch1, mutProb),
+                new Individual(ch2, mutProb)
+                };
+    }
+
+    private void assingGens(boolean isSwapTurn, int currentInd, int[] route1, int[] route2, int[] child1, int[] child2) {
+        if(!isSwapTurn) {
+            child1[currentInd] = route1[currentInd];
+            child2[currentInd] = route2[currentInd];
+        }
+        else {
+            child1[currentInd] = route2[currentInd];
+            child2[currentInd] = route1[currentInd];
+        }
+    }
+
+    private int[] addLastCity(int[] child) {
+        int[] ch = new int[child.length + 1];
+        for(int i = 0; i < child.length; i++) {
+            ch[i] = child[i];
+        }
+        ch[ch.length - 1] = ch[0];
+        return ch;
+    }
+
+    private int findFirstEmpty(int[] route) {
+        int firstEmpty = -1;
+        for(int i = 0; i < route.length; i++) {
+            if(route[i] == -1) {
+                firstEmpty = i;
+                break;
+            }
+        }
+        return firstEmpty;
+    }
+
+    private int findIndexOfaValue(int value, int[] route) {
+        int index = -1;
+        for(int i = 0; i < route.length; i++) {
+            if(route[i] == value) {
+                index = i;
+                break;
+            }
+        }
+        return index;
     }
 
     private double[][] createDistancesArray() {
