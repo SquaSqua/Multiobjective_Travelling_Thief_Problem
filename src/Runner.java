@@ -1,9 +1,5 @@
-import org.omg.PortableInterceptor.INACTIVE;
-
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Date;
 
 public class Runner {
@@ -27,7 +23,7 @@ public class Runner {
         {
             System.out.println("Nie da się utworzyć pliku!");
         }
-        long milliseconds = System.currentTimeMillis() - start;
-        System.out.println(milliseconds / 1000 + "." + milliseconds % 1000 + "s");
+        long stop = System.currentTimeMillis() - start;
+        System.out.println(stop / 1000 + "." + stop % 1000 + "s");
     }
 }
