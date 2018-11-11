@@ -121,32 +121,34 @@ class ParetoFrontsGenerator {
         }
     }
 
-    public String ED_measure(ArrayList<ArrayList<Individual>> paretoFronts) {//todo naprawic
-//        double sumED = 0;
-//        paretoFronts.get(0).sort(new ObjectiveFrontComparator());//docelowo archive
-//        for(int i = 0; i < paretoFronts.size(); i++) {
-//            Individual ind = paretoFronts.get(i);
-//            sumED += Math.round(Math.sqrt(Long.valueOf((int)((ind.getFitnessTime() - ideal.x)
-//                    * (ind.getFitnessTime() - ideal.x) + (ind.getFitnessWage() - ideal.y)
-//                    * (ind.getFitnessWage() - ideal.y)))));
-//        }
-//        sumED = (sumED / paretoFronts.size());
+    String ED_measure(ArrayList<ArrayList<Individual>> paretoFronts) {
+        double sumED = 0;
+        ArrayList<Individual> paretoFront = paretoFronts.get(0);
+        paretoFront.sort(new ObjectiveFrontComparator());
+        for(int i = 0; i < paretoFront.size(); i++) {
+            Individual ind = paretoFront.get(i);
+            sumED += Math.sqrt((long) (int) ((ind.getFitnessTime() - ideal.x)
+                    * (ind.getFitnessTime() - ideal.x) + (ind.getFitnessWage() - ideal.y)
+                    * (ind.getFitnessWage() - ideal.y)));
+        }
 
-        return /*Math.round(sumED) + */"Tu bedzie ED";
+        return (sumED / paretoFront.size()) + "";
     }
 
-    public String PFS_measure(ArrayList<ArrayList<Individual>> paretoFronts) {
-        return paretoFronts.get(0).size() + "";//docelowo archive
+    String PFS_measure(ArrayList<ArrayList<Individual>> paretoFronts) {
+        return paretoFronts.get(0).size() + "";
     }
 
-    public double HV_measure(ArrayList<ArrayList<Individual>> paretoFronts) {
-        paretoFronts.get(0).sort(new ObjectiveFrontComparator());//docelowo archive
-        Long hyperVolume = 0L;
+    double HV_measure(ArrayList<ArrayList<Individual>> paretoFronts) {
+        ArrayList<Individual> paretoFront = paretoFronts.get(0);
+        paretoFront.sort(new ObjectiveFrontComparator());
+        long hyperVolume = 0L;
         double lastY = nadir.y;
-        for(int i = 0; i < paretoFronts.get(0).size(); i++) {
-            hyperVolume += ((int)((nadir.x - paretoFronts.get(0).get(i).getFitnessTime())
-                    * (lastY - paretoFronts.get(0).get(i).getFitnessWage())));
-            lastY = paretoFronts.get(0).get(i).getFitnessWage();
+        for(int i = 0; i < paretoFront.size(); i++) {
+            Individual ind = paretoFront.get(i);
+            hyperVolume += ((int)((nadir.x - ind.getFitnessTime())
+                    * (lastY - ind.getFitnessWage())));
+            lastY = paretoFront.get(i).getFitnessWage();
         }
         return hyperVolume;
     }

@@ -89,17 +89,18 @@ class Evolution {
 
     String evolve() {
 
+        ArrayList<ArrayList<Individual>> pareto = new ArrayList<>();
         initialize();
         for(int generation = 1; generation < numOfGeners; generation++) {
             paretoGenerator.generateFrontsWithAssignments(population);
-            population.addAll(generateOffspring());
-            ArrayList<ArrayList<Individual>> pareto = paretoGenerator.generateFrontsWithAssignments(population);
-            statistics(pareto);//todo which statistics should I print?
+            population.addAll(generateOffspring(generation));
+            pareto = paretoGenerator.generateFrontsWithAssignments(population);
             population = chooseNextGeneration(pareto);
             if(generation == 1) {
                 printPopulation(sBfirstPop);
             }
         }
+        statistics(pareto);
         sBfirstPop.append(printPopulation(sBlastPop));
         sBMeasures.append(sBfirstPop);
         measures = sBMeasures.toString();
@@ -126,10 +127,10 @@ class Evolution {
         return nextGeneration;
     }
 
-    private ArrayList<Individual> generateOffspring() {
+    private ArrayList<Individual> generateOffspring(int generation) {
         ArrayList<Individual> offspring = new ArrayList<>();
         while(offspring.size() < popSize) {
-            Individual[] children = matingPool();
+            Individual[] children = matingPool(generation);
             offspring.add(children[0]);
             if(offspring.size() < popSize) {
                 offspring.add(children[1]);
@@ -139,10 +140,10 @@ class Evolution {
     }
 
     //at this point population is already filled out with rank and crowding distance
-    private Individual[] matingPool() {
+    private Individual[] matingPool(int generation) {
         Individual parent1 = tournament();
         Individual parent2 = tournament();
-        Individual[] children = cX(parent1, parent2);
+        Individual[] children = cX(parent1, parent2, generation);
 //        children[0].setPackingPlanAndFitness(greedy);//tu cos sie zmienia
 //        System.out.println(Arrays.toString(children[0].getPackingPlan()));
         children[0].mutation(greedy);
@@ -216,7 +217,7 @@ class Evolution {
             route[i] = routeList.get(i);
         }
         route[dimension] = route[0];
-        Individual ind = new Individual(route, mutProb);
+        Individual ind = new Individual(route, mutProb, 0);
         ind.setPackingPlanAndFitness(greedy);
         return ind;
     }
@@ -304,7 +305,7 @@ class Evolution {
 //        };
 //    }
 
-    public Individual[] cX(Individual parent1, Individual parent2) {
+    public Individual[] cX(Individual parent1, Individual parent2, int generation) {
         int[] p1 = parent1.getRoute();
         int[] p2 = parent2.getRoute();
         int[] ch1 = new int[p1.length];
@@ -354,8 +355,8 @@ class Evolution {
             }
         }
         return new Individual[]{
-                new Individual(ch1, mutProb),
-                new Individual(ch2, mutProb)
+                new Individual(ch1, mutProb, generation),
+                new Individual(ch2, mutProb, generation)
                 };
     }
 
@@ -428,13 +429,14 @@ class Evolution {
 
     private String printPopulation(StringBuilder sB) {
         int currentRank = 0;
+        sB.append("Czas podrozy").append(", ").append("Zarobek").append(", ").append("Stworzony w generacji\n");
         for(Individual i : population) {
             if(i.getRank() != currentRank) {
                 currentRank++;
                 sB.append("\n");
             }
-            sB.append(i.getFitnessTime()).append(", ").append(i.getFitnessWage()).append(", ")
-                    .append(Arrays.toString(i.getRoute())).append(", ").append(Arrays.toString(i.getPackingPlan()));
+            sB.append(i.getFitnessTime()).append(", ").append(i.getFitnessWage()).append(", ").append(i.getBirthday());
+//                    .append(Arrays.toString(i.getRoute())).append(", ").append(Arrays.toString(i.getPackingPlan()));
             sB.append("\n");
         }
         return sB.toString();

@@ -7,6 +7,7 @@ class Individual {
     private int[] packingPlan;
     private double fitnessTime;
     private int fitnessWage;
+    private int birthday;
 
     private double mutProb;
 
@@ -14,9 +15,10 @@ class Individual {
     private double crowdingDistance;
     private int rank;
 
-    Individual(int[] route, double mutProb) {
+    Individual(int[] route, double mutProb, int birthday) {
         this.route = route;
         this.mutProb = mutProb;
+        this.birthday = birthday;
         packingPlan = null;
     }
 
@@ -56,6 +58,8 @@ class Individual {
     int getFitnessWage() {
         return fitnessWage;
     }
+
+    int getBirthday() { return birthday; }
 
     double getCrowdingDistance() {
         return crowdingDistance;
