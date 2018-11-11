@@ -13,12 +13,10 @@ class Individual {
     //fields accessed only through methods in ParetoFrontGenerator
     private double crowdingDistance;
     private int rank;
-    private int birthday;
 
-    Individual(int[] route, double mutProb, int birthday) {
+    Individual(int[] route, double mutProb) {
         this.route = route;
         this.mutProb = mutProb;
-        this.birthday = birthday;
         packingPlan = null;
     }
 
@@ -67,9 +65,6 @@ class Individual {
         return rank;
     }
 
-    int getBirthday() {
-        return birthday;
-    }
 
     //setters
     void setPackingPlan(int[] packingPlan) {

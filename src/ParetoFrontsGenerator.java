@@ -1,6 +1,5 @@
 import java.lang.reflect.Array;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 
 class ParetoFrontsGenerator {
@@ -82,21 +81,6 @@ class ParetoFrontsGenerator {
         return paretoFronts;
     }
 
-    ArrayList<Individual> ignoreClones(ArrayList<Individual> archive, ArrayList<Individual> paretoFront) {
-        ArrayList<Individual> mergedFronts = new ArrayList<>();
-        for(Individual i : paretoFront) {
-            if(!archive.contains(i)) {//compare references
-                for(Individual a : archive) {
-                    if(!Arrays.equals(a.getRoute(), i.getRoute())) {
-                            mergedFronts.add(i);
-                    }
-                }
-            }
-        }
-
-        return mergedFronts;
-    }
-
     ArrayList<ArrayList<Individual>> generateFrontsWithAssignments(ArrayList<Individual> population) {
         ArrayList<ArrayList<Individual>> paretoFronts;
         paretoFronts = generateFronts(population);
@@ -137,34 +121,32 @@ class ParetoFrontsGenerator {
         }
     }
 
-    String ED_measure(ArrayList<ArrayList<Individual>> paretoFronts) {
-        double sumED = 0;
-        ArrayList<Individual> paretoFront = paretoFronts.get(0);
-        paretoFront.sort(new ObjectiveFrontComparator());//docelowo archive
-        for(int i = 0; i < paretoFront.size(); i++) {
-            Individual ind = paretoFront.get(i);
-            sumED += Math.sqrt((long) (int) ((ind.getFitnessTime() - ideal.x)
-                    * (ind.getFitnessTime() - ideal.x) + (ind.getFitnessWage() - ideal.y)
-                    * (ind.getFitnessWage() - ideal.y)));
-        }
+    public String ED_measure(ArrayList<ArrayList<Individual>> paretoFronts) {//todo naprawic
+//        double sumED = 0;
+//        paretoFronts.get(0).sort(new ObjectiveFrontComparator());//docelowo archive
+//        for(int i = 0; i < paretoFronts.size(); i++) {
+//            Individual ind = paretoFronts.get(i);
+//            sumED += Math.round(Math.sqrt(Long.valueOf((int)((ind.getFitnessTime() - ideal.x)
+//                    * (ind.getFitnessTime() - ideal.x) + (ind.getFitnessWage() - ideal.y)
+//                    * (ind.getFitnessWage() - ideal.y)))));
+//        }
+//        sumED = (sumED / paretoFronts.size());
 
-        return (sumED / paretoFront.size()) + "";
+        return /*Math.round(sumED) + */"Tu bedzie ED";
     }
 
-    String PFS_measure(ArrayList<ArrayList<Individual>> paretoFronts) {
+    public String PFS_measure(ArrayList<ArrayList<Individual>> paretoFronts) {
         return paretoFronts.get(0).size() + "";//docelowo archive
     }
 
-    double HV_measure(ArrayList<ArrayList<Individual>> paretoFronts) {
-        ArrayList<Individual> paretoFront = paretoFronts.get(0);
-        paretoFront.sort(new ObjectiveFrontComparator());//docelowo archive
-        long hyperVolume = 0L;
+    public double HV_measure(ArrayList<ArrayList<Individual>> paretoFronts) {
+        paretoFronts.get(0).sort(new ObjectiveFrontComparator());//docelowo archive
+        Long hyperVolume = 0L;
         double lastY = nadir.y;
-        for(int i = 0; i < paretoFront.size(); i++) {
-            Individual ind = paretoFront.get(i);
-            hyperVolume += ((int)((nadir.x - ind.getFitnessTime())
-                    * (lastY - ind.getFitnessWage())));
-            lastY = paretoFront.get(i).getFitnessWage();
+        for(int i = 0; i < paretoFronts.get(0).size(); i++) {
+            hyperVolume += ((int)((nadir.x - paretoFronts.get(0).get(i).getFitnessTime())
+                    * (lastY - paretoFronts.get(0).get(i).getFitnessWage())));
+            lastY = paretoFronts.get(0).get(i).getFitnessWage();
         }
         return hyperVolume;
     }

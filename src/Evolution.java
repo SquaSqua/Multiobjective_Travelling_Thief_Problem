@@ -11,7 +11,8 @@ class Evolution {
     private int dimension;
     private double[][] cities;
 
-    private GreedyPackingPlan greedy;
+//    private GreedyPackingPlan greedy;
+    public GreedyPackingPlan greedy;
     private ParetoFrontsGenerator paretoGenerator;
 
     private int popSize;
@@ -21,12 +22,11 @@ class Evolution {
     private int tournamentSize;
 
     private ArrayList<Individual> population = new ArrayList<>();
-    private ArrayList<Individual> archive = new ArrayList<>();
 
     //just for a try
     private String measures = "", firstPop = "\nFirst population\n", lastPop = "\nLast population\n";
     private StringBuilder sBMeasures = new StringBuilder(measures);
-    private StringBuilder sBFirstPop = new StringBuilder(firstPop);
+    private StringBuilder sBfirstPop = new StringBuilder(firstPop);
     private StringBuilder sBlastPop = new StringBuilder(lastPop);
 
     Evolution(String definitionFile, int popSize, int numOfGeners, int tournamentSize, double crossProb, double mutProb) {
@@ -84,28 +84,24 @@ class Evolution {
         } catch (Exception e) {
             System.out.println("An error has occurred while reading data: " + e);
         }
+
     }
 
     String evolve() {
-        ArrayList<ArrayList<Individual>> pareto = new ArrayList<>();
+
         initialize();
-        archive = paretoGenerator.generateFrontsWithAssignments(population).get(0);
         for(int generation = 1; generation < numOfGeners; generation++) {
-            population.addAll(generateOffspring(generation));//2N
-            pareto = paretoGenerator.generateFrontsWithAssignments(population);
-            archive.addAll(paretoGenerator.ignoreClones(archive, pareto.get(0)));
-            archive = paretoGenerator.generateFrontsWithAssignments(archive).get(0);
+            paretoGenerator.generateFrontsWithAssignments(population);
+            population.addAll(generateOffspring());
+            ArrayList<ArrayList<Individual>> pareto = paretoGenerator.generateFrontsWithAssignments(population);
+            statistics(pareto);//todo which statistics should I print?
             population = chooseNextGeneration(pareto);
             if(generation == 1) {
-                printPopulation(sBFirstPop, archive);
+                printPopulation(sBfirstPop);
             }
         }
-        ArrayList<ArrayList<Individual>> paretoPop = paretoGenerator.generateFrontsWithAssignments(population);
-        statistics(paretoPop);
-        ArrayList<ArrayList<Individual>> paretoArch = paretoGenerator.generateFrontsWithAssignments(archive);
-        statistics(paretoArch);
-        sBFirstPop.append(printPopulation(sBlastPop, archive));
-        sBMeasures.append(sBFirstPop);
+        sBfirstPop.append(printPopulation(sBlastPop));
+        sBMeasures.append(sBfirstPop);
         measures = sBMeasures.toString();
         return measures;
     }
@@ -130,10 +126,10 @@ class Evolution {
         return nextGeneration;
     }
 
-    private ArrayList<Individual> generateOffspring(int generation) {
+    private ArrayList<Individual> generateOffspring() {
         ArrayList<Individual> offspring = new ArrayList<>();
         while(offspring.size() < popSize) {
-            Individual[] children = matingPool(generation);
+            Individual[] children = matingPool();
             offspring.add(children[0]);
             if(offspring.size() < popSize) {
                 offspring.add(children[1]);
@@ -143,10 +139,12 @@ class Evolution {
     }
 
     //at this point population is already filled out with rank and crowding distance
-    private Individual[] matingPool(int generation) {
+    private Individual[] matingPool() {
         Individual parent1 = tournament();
         Individual parent2 = tournament();
-        Individual[] children = cX(parent1, parent2, generation);
+        Individual[] children = cX(parent1, parent2);
+//        children[0].setPackingPlanAndFitness(greedy);//tu cos sie zmienia
+//        System.out.println(Arrays.toString(children[0].getPackingPlan()));
         children[0].mutation(greedy);
         children[1].mutation(greedy);
         return children;
@@ -218,7 +216,7 @@ class Evolution {
             route[i] = routeList.get(i);
         }
         route[dimension] = route[0];
-        Individual ind = new Individual(route, mutProb, 0);
+        Individual ind = new Individual(route, mutProb);
         ind.setPackingPlanAndFitness(greedy);
         return ind;
     }
@@ -306,7 +304,7 @@ class Evolution {
 //        };
 //    }
 
-    public Individual[] cX(Individual parent1, Individual parent2, int generation) {
+    public Individual[] cX(Individual parent1, Individual parent2) {
         int[] p1 = parent1.getRoute();
         int[] p2 = parent2.getRoute();
         int[] ch1 = new int[p1.length];
@@ -356,8 +354,8 @@ class Evolution {
             }
         }
         return new Individual[]{
-                new Individual(ch1, mutProb, generation),
-                new Individual(ch2, mutProb, generation)
+                new Individual(ch1, mutProb),
+                new Individual(ch2, mutProb)
                 };
     }
 
@@ -428,17 +426,15 @@ class Evolution {
         sBMeasures.append("\n");
     }
 
-    private String printPopulation(StringBuilder sB, ArrayList<Individual> group) {
+    private String printPopulation(StringBuilder sB) {
         int currentRank = 0;
-        for(Individual i : group) {
+        for(Individual i : population) {
             if(i.getRank() != currentRank) {
                 currentRank++;
-//                sB.append("\n");
+                sB.append("\n");
             }
-            sB.append(i.getFitnessWage()).append(", ").append(i.getFitnessTime()).append(", ").append(i.getBirthday());
-                    //.append(", ").append(Arrays.toString(i.getRoute())).append(", ")
-                    // .append(Arrays.toString(i.getPackingPlan()));
-                    // for printing packingPlan and route
+            sB.append(i.getFitnessTime()).append(", ").append(i.getFitnessWage()).append(", ")
+                    .append(Arrays.toString(i.getRoute())).append(", ").append(Arrays.toString(i.getPackingPlan()));
             sB.append("\n");
         }
         return sB.toString();
