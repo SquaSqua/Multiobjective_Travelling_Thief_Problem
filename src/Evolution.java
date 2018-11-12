@@ -1,6 +1,7 @@
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.io.PrintWriter;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -11,7 +12,7 @@ class Evolution {
     private int dimension;
     private double[][] cities;
 
-//    private GreedyPackingPlan greedy;
+    //    private GreedyPackingPlan greedy;
     public GreedyPackingPlan greedy;
     private ParetoFrontsGenerator paretoGenerator;
 
@@ -27,7 +28,7 @@ class Evolution {
     private String measures = "", firstPop = "\nFirst population\n", lastPop = "\nLast population\n";
     private StringBuilder sBMeasures = new StringBuilder(measures);
     private StringBuilder sBFirstPop = new StringBuilder(firstPop);
-    private StringBuilder sBlastPop = new StringBuilder(lastPop);
+    private StringBuilder sBLastPop = new StringBuilder(lastPop);
 
     Evolution(String definitionFile, int popSize, int numOfGeners, int tournamentSize, double crossProb, double mutProb) {
         this.definitionFile = definitionFile;
@@ -51,9 +52,9 @@ class Evolution {
             reader = new BufferedReader(new FileReader(definitionFile));
             reader.readLine();//PROBLEM NAME
             reader.readLine();//KNAPSACK DATA TYPE
-            dimension = (int)getNumber(reader.readLine());
-            numOfItems = (int)getNumber(reader.readLine());
-            capacity = (int)getNumber(reader.readLine());
+            dimension = (int) getNumber(reader.readLine());
+            numOfItems = (int) getNumber(reader.readLine());
+            capacity = (int) getNumber(reader.readLine());
             minSpeed = getNumber(reader.readLine());
             maxSpeed = getNumber(reader.readLine());
             reader.readLine();//RENTING RATIO
@@ -63,7 +64,7 @@ class Evolution {
             items = new int[numOfItems][4];
             for (int i = 0; i < dimension; i++) {//filling out cities array
                 StringTokenizer st = new StringTokenizer(reader.readLine(), " \t");
-                for(int j = 0; j < 3; j++) {
+                for (int j = 0; j < 3; j++) {
                     cities[i][j] = Double.parseDouble(st.nextToken());
                 }
             }
@@ -71,7 +72,7 @@ class Evolution {
             double[][] distances = createDistancesArray();
             for (int i = 0; i < numOfItems; i++) {//filling out items array
                 StringTokenizer st = new StringTokenizer(reader.readLine(), " \t");
-                for(int j = 0; j < 4; j++) {
+                for (int j = 0; j < 4; j++) {
                     items[i][j] = Integer.parseInt(st.nextToken());
                 }
                 Point ideal = countPoint(true, distances, dimension, items);
@@ -91,17 +92,18 @@ class Evolution {
 
         ArrayList<ArrayList<Individual>> pareto = new ArrayList<>();
         initialize();
-        for(int generation = 1; generation < numOfGeners; generation++) {
+        for (int generation = 1; generation < numOfGeners; generation++) {
             paretoGenerator.generateFrontsWithAssignments(population);
             population.addAll(generateOffspring(generation));
             pareto = paretoGenerator.generateFrontsWithAssignments(population);
             population = chooseNextGeneration(pareto);
             if(generation == 1) {
-                printPopulationHorizontally(sBFirstPop, pareto);
+                printPopulation(sBFirstPop);
             }
         }
         statistics(pareto);
-        sBFirstPop.append(printPopulationHorizontally(sBlastPop, pareto));
+        printPopulation(sBLastPop);
+        sBFirstPop.append(sBLastPop);
         sBMeasures.append(sBFirstPop);
         measures = sBMeasures.toString();
         return measures;
@@ -109,16 +111,15 @@ class Evolution {
 
     private ArrayList<Individual> chooseNextGeneration(ArrayList<ArrayList<Individual>> pareto) {
         ArrayList<Individual> nextGeneration = new ArrayList<>();
-        while(nextGeneration.size() < popSize) {
-            if(pareto.get(0).size() <= popSize - nextGeneration.size()) {
+        while (nextGeneration.size() < popSize) {
+            if (pareto.get(0).size() <= popSize - nextGeneration.size()) {
                 nextGeneration.addAll(pareto.get(0));
                 pareto.remove(0);
-            }
-            else {
+            } else {
                 ArrayList<Individual> firstFront = pareto.get(0);
                 firstFront.sort(new CrowdingDistanceComparator());
-                for(Individual ind : firstFront) {
-                    if(nextGeneration.size() < popSize) {
+                for (Individual ind : firstFront) {
+                    if (nextGeneration.size() < popSize) {
                         nextGeneration.add(ind);
                     }
                 }
@@ -129,10 +130,10 @@ class Evolution {
 
     private ArrayList<Individual> generateOffspring(int generation) {
         ArrayList<Individual> offspring = new ArrayList<>();
-        while(offspring.size() < popSize) {
+        while (offspring.size() < popSize) {
             Individual[] children = matingPool(generation);
             offspring.add(children[0]);
-            if(offspring.size() < popSize) {
+            if (offspring.size() < popSize) {
                 offspring.add(children[1]);
             }
         }
@@ -156,12 +157,12 @@ class Evolution {
         double time;
         int wage;
         Point point;
-        if(isIdeal){
+        if (isIdeal) {
             time = Double.MAX_VALUE;
             wage = Integer.MIN_VALUE;
-            for(int i = 0; i < distances.length; i++) {
-                for(int j = i + 1; j < distances[i].length; j++) {
-                    if(time > distances[i][j] && distances[i][j] != 0) {
+            for (int i = 0; i < distances.length; i++) {
+                for (int j = i + 1; j < distances[i].length; j++) {
+                    if (time > distances[i][j] && distances[i][j] != 0) {
                         time = distances[i][j];
                     }
                 }
@@ -172,13 +173,12 @@ class Evolution {
                 }
             }
             point = new Point(wage * items.length, time * dimension);
-        }
-        else {
+        } else {
             time = Double.MIN_VALUE;
             wage = Integer.MAX_VALUE;
-            for(int i = 0; i < distances.length; i++) {
-                for(int j = i + 1; j < distances[i].length; j++) {
-                    if(time > distances[i][j] && distances[i][j] != 0) {
+            for (int i = 0; i < distances.length; i++) {
+                for (int j = i + 1; j < distances[i].length; j++) {
+                    if (time > distances[i][j] && distances[i][j] != 0) {
                         time = distances[i][j];
                     }
                 }
@@ -227,15 +227,14 @@ class Evolution {
         Individual bestIndividual = population.get(0);//just any individual to initialize
         int bestRank = Integer.MAX_VALUE;
         Random rand = new Random();
-        for(int i = 0; i < tournamentSize; i++) {
+        for (int i = 0; i < tournamentSize; i++) {
             Individual individual = population.get(rand.nextInt(popSize));
             int rank = individual.getRank();
             if (rank < bestRank) {
                 bestRank = rank;
                 bestIndividual = individual;
-            }
-            else if(rank == bestRank) {
-                if(bestIndividual.getCrowdingDistance() < individual.getCrowdingDistance()) {
+            } else if (rank == bestRank) {
+                if (bestIndividual.getCrowdingDistance() < individual.getCrowdingDistance()) {
                     bestIndividual = individual;
                 }
             }
@@ -311,17 +310,17 @@ class Evolution {
         int[] ch1 = new int[p1.length];
         int[] ch2 = new int[p1.length];
 
-        if(Math.random() < crossProb) {
+        if (Math.random() < crossProb) {
             int[] route1 = new int[p1.length - 1];
             int[] route2 = new int[p1.length - 1];
-            for(int i = 0; i < route1.length; i++) {
+            for (int i = 0; i < route1.length; i++) {
                 route1[i] = p1[i];
                 route2[i] = p2[i];
             }
             int[] child1 = new int[route1.length];
             int[] child2 = new int[route2.length];
 
-            for(int i = 0; i < child1.length; i++) {
+            for (int i = 0; i < child1.length; i++) {
                 child1[i] = -1;
                 child2[i] = -1;
             }
@@ -329,16 +328,16 @@ class Evolution {
             int currentInd = 0;
 
             boolean isSwapTurn = false;
-            while(true) {
+            while (true) {
                 assignGens(isSwapTurn, currentInd, route1, route2, child1, child2);
-                if(route1[currentInd] == route2[currentInd]) {
+                if (route1[currentInd] == route2[currentInd]) {
                     isSwapTurn = !isSwapTurn;
                 }
                 currentInd = findIndexOfaValue(route2[currentInd], route1);
-                if(route2[currentInd] == beginningValue) {
+                if (route2[currentInd] == beginningValue) {
                     assignGens(isSwapTurn, currentInd, route1, route2, child1, child2);
                     currentInd = findFirstEmpty(child1);
-                    if(currentInd == -1) {
+                    if (currentInd == -1) {
                         break;
                     }
                     beginningValue = route1[currentInd];
@@ -347,9 +346,8 @@ class Evolution {
             }
             ch1 = addLastCity(child1);
             ch2 = addLastCity(child2);
-        }
-        else {
-            for(int i = 0; i < ch1.length; i++) {
+        } else {
+            for (int i = 0; i < ch1.length; i++) {
                 ch1[i] = p1[i];
                 ch2[i] = p2[i];
             }
@@ -357,15 +355,14 @@ class Evolution {
         return new Individual[]{
                 new Individual(ch1, mutProb, generation),
                 new Individual(ch2, mutProb, generation)
-                };
+        };
     }
 
     private void assignGens(boolean isSwapTurn, int currentInd, int[] route1, int[] route2, int[] child1, int[] child2) {
-        if(!isSwapTurn) {
+        if (!isSwapTurn) {
             child1[currentInd] = route1[currentInd];
             child2[currentInd] = route2[currentInd];
-        }
-        else {
+        } else {
             child1[currentInd] = route2[currentInd];
             child2[currentInd] = route1[currentInd];
         }
@@ -373,7 +370,7 @@ class Evolution {
 
     private int[] addLastCity(int[] child) {
         int[] ch = new int[child.length + 1];
-        for(int i = 0; i < child.length; i++) {
+        for (int i = 0; i < child.length; i++) {
             ch[i] = child[i];
         }
         ch[ch.length - 1] = ch[0];
@@ -382,8 +379,8 @@ class Evolution {
 
     private int findFirstEmpty(int[] route) {
         int firstEmpty = -1;
-        for(int i = 0; i < route.length; i++) {
-            if(route[i] == -1) {
+        for (int i = 0; i < route.length; i++) {
+            if (route[i] == -1) {
                 firstEmpty = i;
                 break;
             }
@@ -393,8 +390,8 @@ class Evolution {
 
     private int findIndexOfaValue(int value, int[] route) {
         int index = -1;
-        for(int i = 0; i < route.length; i++) {
-            if(route[i] == value) {
+        for (int i = 0; i < route.length; i++) {
+            if (route[i] == value) {
                 index = i;
                 break;
             }
@@ -430,8 +427,8 @@ class Evolution {
     private String printPopulation(StringBuilder sB) {
         int currentRank = 0;
         sB.append("Czas podrozy").append(", ").append("Zarobek").append(", ").append("Stworzony w generacji\n");
-        for(Individual i : population) {
-            if(i.getRank() != currentRank) {
+        for (Individual i : population) {
+            if (i.getRank() != currentRank) {
                 currentRank++;
                 sB.append("\n");
             }
@@ -442,21 +439,23 @@ class Evolution {
         return sB.toString();
     }
 
+    //nie dziala bo pareto jest juz modyfikowane przy chooseNextGeneration
+    //da sie latwo naprawic wywolujac jeszcze raz generateFronts na populacji i przekazujac to nowe pareto,
+    //ale zwyczajnie sie to nie oplaca
     private String printPopulationHorizontally(StringBuilder sB, ArrayList<ArrayList<Individual>> pareto) {
         int maxLength = 0;
-        for(int i = 0; i < pareto.size(); i++) {
+        for (int i = 0; i < pareto.size(); i++) {
             ArrayList<Individual> currentFront = pareto.get(i);
-            if(maxLength < currentFront.size()) {
+            if (maxLength < currentFront.size()) {
                 maxLength = currentFront.size();
             }
         }
-        for(int i = 0; i < maxLength; i++) {//number of row
-            for(int j = 0; j < pareto.size(); j++) {//j - number of front
-                if(pareto.get(j).size() <= i){
-                    sB.append(",");
-                }
-                else {
-                    sB.append(pareto.get(j).get(i).getFitnessTime()).append(", ").append(pareto.get(j).get(i).getFitnessWage());
+        for (int i = 0; i < 1/*maxLength*/; i++) {//number of row
+            for (int j = 0; j < pareto.size(); j++) {//j - number of front
+                if (pareto.get(j).size() <= i) {
+                    sB.append(",,");
+                } else {
+                    sB.append(pareto.get(j).get(i).getFitnessTime()).append(", ").append(pareto.get(j).get(i).getFitnessWage()).append(", ");
                 }
             }
             sB.append("\n");

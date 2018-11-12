@@ -3,11 +3,11 @@
   <component name="ChangeListManager">
     <list default="true" id="05abc257-f592-4d02-a035-5c8eeb1353b3" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Zeszyt1.ods" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/out/production/Multiobjective_Travelling_Thief_Problem/Evolution.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/Multiobjective_Travelling_Thief_Problem/Evolution.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/Multiobjective_Travelling_Thief_Problem/Individual.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/Multiobjective_Travelling_Thief_Problem/Individual.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/out/production/Multiobjective_Travelling_Thief_Problem/ParetoFrontsGenerator.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/Multiobjective_Travelling_Thief_Problem/ParetoFrontsGenerator.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/out/production/Multiobjective_Travelling_Thief_Problem/Runner.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/Multiobjective_Travelling_Thief_Problem/Runner.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/results_10_0_11_37_42.csv" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/results_10_1_1_16_34.csv" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Evolution.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Evolution.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Individual.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Individual.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/ParetoFrontsGenerator.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/ParetoFrontsGenerator.java" afterDir="false" />
@@ -24,37 +24,37 @@
     <session id="1759452473">
       <usages-collector id="statistics.lifecycle.project">
         <counts>
-          <entry key="project.closed" value="14" />
+          <entry key="project.closed" value="15" />
           <entry key="project.open.time.1" value="4" />
-          <entry key="project.open.time.17" value="1" />
+          <entry key="project.open.time.17" value="2" />
           <entry key="project.open.time.26" value="2" />
           <entry key="project.open.time.30" value="2" />
           <entry key="project.open.time.36" value="1" />
           <entry key="project.open.time.48" value="1" />
           <entry key="project.open.time.6" value="4" />
-          <entry key="project.opened" value="15" />
+          <entry key="project.opened" value="16" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.types.edit">
         <counts>
-          <entry key="JAVA" value="11192" />
+          <entry key="JAVA" value="12928" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.extensions.edit">
         <counts>
-          <entry key="java" value="11192" />
+          <entry key="java" value="12928" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.types.open">
         <counts>
-          <entry key="CSV" value="2" />
+          <entry key="CSV" value="8" />
           <entry key="JAVA" value="19" />
           <entry key="PLAIN_TEXT" value="18" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.extensions.open">
         <counts>
-          <entry key="csv" value="16" />
+          <entry key="csv" value="22" />
           <entry key="java" value="19" />
           <entry key="ttp" value="4" />
         </counts>
@@ -67,42 +67,44 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/Individual.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="270">
-              <caret line="42" selection-start-line="42" selection-end-line="42" />
+            <state relative-caret-position="108">
+              <caret line="42" column="123" selection-start-line="42" selection-start-column="123" selection-end-line="42" selection-end-column="123" />
               <folding>
                 <element signature="method#Individual#0;class#Individual#0" />
                 <element signature="e#1680#1681#0" expanded="true" />
                 <element signature="e#1707#1708#0" expanded="true" />
                 <element signature="method#setPackingPlanAndFitness#0;class#Individual#0" />
+                <element signature="e#2016#2017#0" expanded="true" />
+                <element signature="e#2062#2063#0" expanded="true" />
               </folding>
             </state>
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="true">
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/Evolution.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="351">
-              <caret line="455" column="32" lean-forward="true" selection-start-line="455" selection-start-column="32" selection-end-line="455" selection-end-column="32" />
+            <state relative-caret-position="972">
+              <caret line="114" column="74" lean-forward="true" selection-start-line="114" selection-start-column="74" selection-end-line="114" selection-end-column="74" />
               <folding>
                 <element signature="e#965#1348#0" />
                 <element signature="e#1354#3529#0" />
-                <element signature="e#5091#5506#0" />
-                <element signature="e#5512#6058#0" />
-                <element signature="e#5799#5874#0" />
-                <element signature="e#6064#7513#0" />
-                <element signature="e#7519#7720#0" />
-                <element signature="e#7726#7862#0" />
-                <element signature="e#7868#8404#0" />
-                <element signature="e#8410#9171#0" />
-                <element signature="e#9173#9251#0" />
-                <element signature="e#11439#13470#0" />
-                <element signature="e#13476#13872#0" />
-                <element signature="e#13878#14112#0" />
-                <element signature="e#14118#14381#0" />
-                <element signature="e#14387#14652#0" />
-                <element signature="e#14658#15306#0" />
-                <element signature="e#15312#15627#0" />
+                <element signature="e#5131#5546#0" />
+                <element signature="e#5552#6098#0" />
+                <element signature="e#5839#5914#0" />
+                <element signature="e#6104#7553#0" />
+                <element signature="e#7559#7760#0" />
+                <element signature="e#7766#7902#0" />
+                <element signature="e#7908#8444#0" />
+                <element signature="e#8450#9211#0" />
+                <element signature="e#9213#9291#0" />
+                <element signature="e#11479#13510#0" />
+                <element signature="e#13516#13912#0" />
+                <element signature="e#13918#14152#0" />
+                <element signature="e#14158#14421#0" />
+                <element signature="e#14427#14692#0" />
+                <element signature="e#14698#15346#0" />
+                <element signature="e#15352#15667#0" />
               </folding>
             </state>
           </provider>
@@ -111,8 +113,17 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/ParetoFrontsGenerator.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-216">
-              <caret line="35" column="47" selection-start-line="35" selection-start-column="47" selection-end-line="35" selection-end-column="47" />
+            <state relative-caret-position="436">
+              <caret line="57" column="55" selection-start-line="57" selection-start-column="55" selection-end-line="57" selection-end-column="55" />
+              <folding>
+                <element signature="method#assignRank#0;class#ParetoFrontsGenerator#0" />
+                <element signature="method#objectiveSorting#0;class#ParetoFrontsGenerator#0" />
+                <element signature="method#crowdingDistanceSetter#0;class#ParetoFrontsGenerator#0" />
+                <element signature="method#ED_measure#0;class#ParetoFrontsGenerator#0" />
+                <element signature="e#6963#6964#0" expanded="true" />
+                <element signature="e#7017#7018#0" expanded="true" />
+                <element signature="method#HV_measure#0;class#ParetoFrontsGenerator#0" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -120,8 +131,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/GreedyPackingPlan.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1386">
-              <caret line="79" column="43" selection-start-line="79" selection-start-column="43" selection-end-line="79" selection-end-column="43" />
+            <state relative-caret-position="-733">
+              <caret line="19" column="42" selection-start-line="19" selection-start-column="23" selection-end-line="19" selection-end-column="42" />
               <folding>
                 <element signature="method#countFitnessWage#0;class#GreedyPackingPlan#0" />
                 <element signature="method#countFitnessTime#0;class#GreedyPackingPlan#0" />
@@ -131,11 +142,11 @@
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="false">
+      <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/Runner.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-774">
-              <caret line="15" column="31" lean-forward="true" selection-start-line="15" selection-start-column="31" selection-end-line="15" selection-end-column="31" />
+            <state relative-caret-position="90">
+              <caret line="5" column="44" lean-forward="true" selection-start-line="5" selection-start-column="44" selection-end-line="5" selection-end-column="44" />
               <folding>
                 <element signature="imports" expanded="true" />
               </folding>
@@ -188,10 +199,10 @@
         <option value="$PROJECT_DIR$/src/ObjectiveFrontComparator.java" />
         <option value="$PROJECT_DIR$/results.csv" />
         <option value="$PROJECT_DIR$/src/GreedyPackingPlan.java" />
-        <option value="$PROJECT_DIR$/src/Individual.java" />
-        <option value="$PROJECT_DIR$/src/Runner.java" />
-        <option value="$PROJECT_DIR$/src/ParetoFrontsGenerator.java" />
         <option value="$PROJECT_DIR$/src/Evolution.java" />
+        <option value="$PROJECT_DIR$/src/ParetoFrontsGenerator.java" />
+        <option value="$PROJECT_DIR$/src/Runner.java" />
+        <option value="$PROJECT_DIR$/src/Individual.java" />
       </list>
     </option>
   </component>
@@ -209,6 +220,7 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
+      <pane id="AndroidView" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
@@ -225,13 +237,12 @@
           <select />
         </subPane>
       </pane>
-      <pane id="PackagesPane" />
-      <pane id="AndroidView" />
       <pane id="Scope" />
+      <pane id="PackagesPane" />
     </panes>
   </component>
   <component name="PropertiesComponent">
-    <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1541981958805" />
+    <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1542045393960" />
     <property name="settings.editor.selected.configurable" value="preferences.lookFeel" />
   </component>
   <component name="RecentsManager">
@@ -284,7 +295,7 @@
   <component name="ToolWindowManager">
     <frame x="-7" y="-7" width="1550" height="838" extended-state="6" />
     <layout>
-      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.14496644" />
+      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.14697987" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="Image Layers" order="2" />
       <window_info id="Designer" order="3" />
@@ -292,9 +303,9 @@
       <window_info id="Capture Tool" order="5" />
       <window_info id="Favorites" order="6" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
-      <window_info anchor="bottom" id="Find" order="1" />
-      <window_info anchor="bottom" id="Run" order="2" weight="0.35602838" />
-      <window_info anchor="bottom" id="Debug" order="3" weight="0.59716314" />
+      <window_info anchor="bottom" id="Find" order="1" weight="0.32907802" />
+      <window_info anchor="bottom" id="Run" order="2" weight="0.235461" />
+      <window_info anchor="bottom" id="Debug" order="3" weight="0.14326242" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
       <window_info anchor="bottom" id="TODO" order="6" />
@@ -348,9 +359,9 @@
       <breakpoints>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/Runner.java</url>
-          <line>99</line>
+          <line>54</line>
           <properties />
-          <option name="timeStamp" value="1" />
+          <option name="timeStamp" value="13" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>
@@ -361,6 +372,20 @@
         <watch expression="children[0].packingPlan[0]" />
       </configuration>
     </watches-manager>
+  </component>
+  <component name="debuggerHistoryManager">
+    <expressions id="breakpointCondition">
+      <expression>
+        <expression-string>paretoFronts.get(1).size() == 4</expression-string>
+        <language-id>JAVA</language-id>
+        <evaluation-mode>EXPRESSION</evaluation-mode>
+      </expression>
+      <expression>
+        <expression-string>paretoFronts.get(1).size() == 3</expression-string>
+        <language-id>JAVA</language-id>
+        <evaluation-mode>EXPRESSION</evaluation-mode>
+      </expression>
+    </expressions>
   </component>
   <component name="editorHistoryManager">
     <entry file="file://$PROJECT_DIR$/src/Loader.java" />
@@ -406,10 +431,27 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/results_10_1_1_16_34.csv">
+      <provider selected="true" editor-type-id="csv-text-editor">
+        <state relative-caret-position="72">
+          <caret line="4" column="39" selection-start-line="4" selection-start-column="39" selection-end-line="4" selection-end-column="39" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/W pionie.csv">
+      <provider selected="true" editor-type-id="csv-text-editor">
+        <state relative-caret-position="108">
+          <caret line="6" lean-forward="true" selection-start-line="6" selection-end-line="6" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/1_-1.csv">
+      <provider selected="true" editor-type-id="csv-text-editor" />
+    </entry>
     <entry file="file://$PROJECT_DIR$/src/GreedyPackingPlan.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1386">
-          <caret line="79" column="43" selection-start-line="79" selection-start-column="43" selection-end-line="79" selection-end-column="43" />
+        <state relative-caret-position="-733">
+          <caret line="19" column="42" selection-start-line="19" selection-start-column="23" selection-end-line="19" selection-end-column="42" />
           <folding>
             <element signature="method#countFitnessWage#0;class#GreedyPackingPlan#0" />
             <element signature="method#countFitnessTime#0;class#GreedyPackingPlan#0" />
@@ -418,59 +460,77 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/Individual.java">
+    <entry file="file://$PROJECT_DIR$/src/Evolution.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="270">
-          <caret line="42" selection-start-line="42" selection-end-line="42" />
+        <state relative-caret-position="972">
+          <caret line="114" column="74" lean-forward="true" selection-start-line="114" selection-start-column="74" selection-end-line="114" selection-end-column="74" />
           <folding>
-            <element signature="method#Individual#0;class#Individual#0" />
-            <element signature="e#1680#1681#0" expanded="true" />
-            <element signature="e#1707#1708#0" expanded="true" />
-            <element signature="method#setPackingPlanAndFitness#0;class#Individual#0" />
+            <element signature="e#965#1348#0" />
+            <element signature="e#1354#3529#0" />
+            <element signature="e#5131#5546#0" />
+            <element signature="e#5552#6098#0" />
+            <element signature="e#5839#5914#0" />
+            <element signature="e#6104#7553#0" />
+            <element signature="e#7559#7760#0" />
+            <element signature="e#7766#7902#0" />
+            <element signature="e#7908#8444#0" />
+            <element signature="e#8450#9211#0" />
+            <element signature="e#9213#9291#0" />
+            <element signature="e#11479#13510#0" />
+            <element signature="e#13516#13912#0" />
+            <element signature="e#13918#14152#0" />
+            <element signature="e#14158#14421#0" />
+            <element signature="e#14427#14692#0" />
+            <element signature="e#14698#15346#0" />
+            <element signature="e#15352#15667#0" />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/results_10_1_15_50_41.csv">
+      <provider selected="true" editor-type-id="csv-text-editor">
+        <state relative-caret-position="118">
+          <caret line="21" column="29" lean-forward="true" selection-start-line="21" selection-start-column="29" selection-end-line="21" selection-end-column="29" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/ParetoFrontsGenerator.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-216">
-          <caret line="35" column="47" selection-start-line="35" selection-start-column="47" selection-end-line="35" selection-end-column="47" />
+        <state relative-caret-position="436">
+          <caret line="57" column="55" selection-start-line="57" selection-start-column="55" selection-end-line="57" selection-end-column="55" />
+          <folding>
+            <element signature="method#assignRank#0;class#ParetoFrontsGenerator#0" />
+            <element signature="method#objectiveSorting#0;class#ParetoFrontsGenerator#0" />
+            <element signature="method#crowdingDistanceSetter#0;class#ParetoFrontsGenerator#0" />
+            <element signature="method#ED_measure#0;class#ParetoFrontsGenerator#0" />
+            <element signature="e#6963#6964#0" expanded="true" />
+            <element signature="e#7017#7018#0" expanded="true" />
+            <element signature="method#HV_measure#0;class#ParetoFrontsGenerator#0" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/Individual.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="108">
+          <caret line="42" column="123" selection-start-line="42" selection-start-column="123" selection-end-line="42" selection-end-column="123" />
+          <folding>
+            <element signature="method#Individual#0;class#Individual#0" />
+            <element signature="e#1680#1681#0" expanded="true" />
+            <element signature="e#1707#1708#0" expanded="true" />
+            <element signature="method#setPackingPlanAndFitness#0;class#Individual#0" />
+            <element signature="e#2016#2017#0" expanded="true" />
+            <element signature="e#2062#2063#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/Runner.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-774">
-          <caret line="15" column="31" lean-forward="true" selection-start-line="15" selection-start-column="31" selection-end-line="15" selection-end-column="31" />
+        <state relative-caret-position="90">
+          <caret line="5" column="44" lean-forward="true" selection-start-line="5" selection-start-column="44" selection-end-line="5" selection-end-column="44" />
           <folding>
             <element signature="imports" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/Evolution.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="351">
-          <caret line="455" column="32" lean-forward="true" selection-start-line="455" selection-start-column="32" selection-end-line="455" selection-end-column="32" />
-          <folding>
-            <element signature="e#965#1348#0" />
-            <element signature="e#1354#3529#0" />
-            <element signature="e#5091#5506#0" />
-            <element signature="e#5512#6058#0" />
-            <element signature="e#5799#5874#0" />
-            <element signature="e#6064#7513#0" />
-            <element signature="e#7519#7720#0" />
-            <element signature="e#7726#7862#0" />
-            <element signature="e#7868#8404#0" />
-            <element signature="e#8410#9171#0" />
-            <element signature="e#9173#9251#0" />
-            <element signature="e#11439#13470#0" />
-            <element signature="e#13476#13872#0" />
-            <element signature="e#13878#14112#0" />
-            <element signature="e#14118#14381#0" />
-            <element signature="e#14387#14652#0" />
-            <element signature="e#14658#15306#0" />
-            <element signature="e#15312#15627#0" />
           </folding>
         </state>
       </provider>

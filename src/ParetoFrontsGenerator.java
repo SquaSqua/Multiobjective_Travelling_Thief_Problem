@@ -12,7 +12,7 @@ class ParetoFrontsGenerator {
     }
 
     //each calling overrides last set paretoFronts
-    private ArrayList<ArrayList<Individual>> generateFronts(ArrayList<Individual> population) {//tu ma byc private
+    private ArrayList<ArrayList<Individual>> generateFronts(ArrayList<Individual> population) {
         ArrayList<ArrayList<Individual>> paretoFronts = new ArrayList<>();
         paretoFronts.add(new ArrayList<>());
         for(int i = 0; i < population.size(); i++) {
@@ -33,7 +33,7 @@ class ParetoFrontsGenerator {
                                 j = paretoFronts.size();
                             }
                             break;
-                        } else if (compared == 1) {//uwaga! zamienione compared = -1 z tym nizszym
+                        } else if (compared == 1) {
                             //zamiana miejsc
                             ArrayList<Individual> betterFront = new ArrayList<>();
                             betterFront.add(population.get(i));
@@ -50,6 +50,12 @@ class ParetoFrontsGenerator {
                                 }
                             }
                             paretoFronts.add(j, betterFront);
+                            ArrayList<ArrayList<Individual>> fixedPareto = new ArrayList<>();
+                            for(int correctParetoIndex = 0; correctParetoIndex < j + 1; correctParetoIndex++) {
+                                fixedPareto.add(paretoFronts.get(correctParetoIndex));
+                            }
+                            fixedPareto.addAll(fixFronts(paretoFronts, j));
+                            paretoFronts = fixedPareto;
                             if(i < population.size() - 1) {
                                 i++;
                                 j = -1;
@@ -58,8 +64,8 @@ class ParetoFrontsGenerator {
                             }
                             break;
                         } else if (compared == -1) {
-                            //nowy front
-                            if (paretoFronts.size() < j + 2) {
+                            //nowy gorszy front
+                            if (paretoFronts.size() < j + 2) {//1+1
                                 paretoFronts.add(new ArrayList<>());
                                 paretoFronts.get(j + 1).add(population.get(i));
                                 if(i < population.size() - 1) {
@@ -80,6 +86,40 @@ class ParetoFrontsGenerator {
         }
         return paretoFronts;
     }
+
+    private ArrayList<ArrayList<Individual>> fixFronts(ArrayList<ArrayList<Individual>> paretoFronts, int j) {
+        ArrayList<Individual> tempPopulation = new ArrayList<>();
+        for(int i = j + 1; i < paretoFronts.size(); i++) {
+            tempPopulation.addAll(paretoFronts.get(i));
+        }
+        ParetoFrontsGenerator generator = new ParetoFrontsGenerator(ideal, nadir);
+        return generator.generateFronts(tempPopulation);
+    }
+
+//    private ArrayList<ArrayList<Individual>> generateFronts2(ArrayList<Individual> population) {
+//        ArrayList<ArrayList<Individual>> paretoFronts = new ArrayList<>();
+//        int currentRank = 0;
+//        int currentIndex = 0;
+//        while(!population.isEmpty()) {
+//            Individual currentIndividual = population.get(currentIndex);
+//            boolean isDominated = false;
+//            boolean hasEqual = false;
+//            for(int i = 0; i < population.size(); i++) {
+//                int amIbetter = currentIndividual.compareTo(population.get(i));
+//                if(amIbetter == -1) {
+//                    isDominated = true;
+//                    currentIndex++;
+//                    break;
+//                }
+//                else if(amIbetter == 0 && !hasEqual) {
+//                    hasEqual = true;
+//                }
+//            }
+//            if(!isDominated) {
+//                paretoFronts.
+//            }
+//        }
+//    }
 
     ArrayList<ArrayList<Individual>> generateFrontsWithAssignments(ArrayList<Individual> population) {
         ArrayList<ArrayList<Individual>> paretoFronts;
