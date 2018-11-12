@@ -1,3 +1,5 @@
+import org.omg.PortableInterceptor.INACTIVE;
+
 import java.util.Arrays;
 import java.util.Random;
 
@@ -38,7 +40,7 @@ class Individual {
     }
 
     int compareTo(Individual o) {
-        return (int) Math.signum(Math.signum(fitnessTime - o.fitnessTime) + Math.signum(fitnessWage - o.fitnessWage));
+        return (int) Math.signum((Math.signum(fitnessTime - o.fitnessTime) * -1)+ Math.signum(fitnessWage - o.fitnessWage));
     }
 
 

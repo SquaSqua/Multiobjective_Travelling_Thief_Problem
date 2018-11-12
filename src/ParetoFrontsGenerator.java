@@ -12,7 +12,7 @@ class ParetoFrontsGenerator {
     }
 
     //each calling overrides last set paretoFronts
-    private ArrayList<ArrayList<Individual>> generateFronts(ArrayList<Individual> population) {
+    private ArrayList<ArrayList<Individual>> generateFronts(ArrayList<Individual> population) {//tu ma byc private
         ArrayList<ArrayList<Individual>> paretoFronts = new ArrayList<>();
         paretoFronts.add(new ArrayList<>());
         for(int i = 0; i < population.size(); i++) {
@@ -33,7 +33,7 @@ class ParetoFrontsGenerator {
                                 j = paretoFronts.size();
                             }
                             break;
-                        } else if (compared == -1) {
+                        } else if (compared == 1) {//uwaga! zamienione compared = -1 z tym nizszym
                             //zamiana miejsc
                             ArrayList<Individual> betterFront = new ArrayList<>();
                             betterFront.add(population.get(i));
@@ -57,7 +57,7 @@ class ParetoFrontsGenerator {
                                 j = paretoFronts.size();
                             }
                             break;
-                        } else if (compared == 1) {
+                        } else if (compared == -1) {
                             //nowy front
                             if (paretoFronts.size() < j + 2) {
                                 paretoFronts.add(new ArrayList<>());

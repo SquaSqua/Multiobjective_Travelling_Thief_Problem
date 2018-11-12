@@ -26,7 +26,7 @@ class Evolution {
     //just for a try
     private String measures = "", firstPop = "\nFirst population\n", lastPop = "\nLast population\n";
     private StringBuilder sBMeasures = new StringBuilder(measures);
-    private StringBuilder sBfirstPop = new StringBuilder(firstPop);
+    private StringBuilder sBFirstPop = new StringBuilder(firstPop);
     private StringBuilder sBlastPop = new StringBuilder(lastPop);
 
     Evolution(String definitionFile, int popSize, int numOfGeners, int tournamentSize, double crossProb, double mutProb) {
@@ -97,12 +97,12 @@ class Evolution {
             pareto = paretoGenerator.generateFrontsWithAssignments(population);
             population = chooseNextGeneration(pareto);
             if(generation == 1) {
-                printPopulation(sBfirstPop);
+                printPopulationHorizontally(sBFirstPop, pareto);
             }
         }
         statistics(pareto);
-        sBfirstPop.append(printPopulation(sBlastPop));
-        sBMeasures.append(sBfirstPop);
+        sBFirstPop.append(printPopulationHorizontally(sBlastPop, pareto));
+        sBMeasures.append(sBFirstPop);
         measures = sBMeasures.toString();
         return measures;
     }
@@ -437,6 +437,28 @@ class Evolution {
             }
             sB.append(i.getFitnessTime()).append(", ").append(i.getFitnessWage()).append(", ").append(i.getBirthday());
 //                    .append(Arrays.toString(i.getRoute())).append(", ").append(Arrays.toString(i.getPackingPlan()));
+            sB.append("\n");
+        }
+        return sB.toString();
+    }
+
+    private String printPopulationHorizontally(StringBuilder sB, ArrayList<ArrayList<Individual>> pareto) {
+        int maxLength = 0;
+        for(int i = 0; i < pareto.size(); i++) {
+            ArrayList<Individual> currentFront = pareto.get(i);
+            if(maxLength < currentFront.size()) {
+                maxLength = currentFront.size();
+            }
+        }
+        for(int i = 0; i < maxLength; i++) {//number of row
+            for(int j = 0; j < pareto.size(); j++) {//j - number of front
+                if(pareto.get(j).size() <= i){
+                    sB.append(",");
+                }
+                else {
+                    sB.append(pareto.get(j).get(i).getFitnessTime()).append(", ").append(pareto.get(j).get(i).getFitnessWage());
+                }
+            }
             sB.append("\n");
         }
         return sB.toString();
