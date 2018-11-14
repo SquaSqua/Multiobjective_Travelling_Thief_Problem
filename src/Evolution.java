@@ -1,7 +1,6 @@
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
-import java.io.PrintWriter;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -144,7 +143,7 @@ class Evolution {
     private Individual[] matingPool(int generation) {
         Individual parent1 = tournament();
         Individual parent2 = tournament();
-        Individual[] children = cX(parent1, parent2, generation);
+        Individual[] children = cycleCrossing(parent1, parent2, generation);
 //        children[0].setPackingPlanAndFitness(greedy);//tu cos sie zmienia
 //        System.out.println(Arrays.toString(children[0].getPackingPlan()));
         children[0].mutation(greedy);
@@ -304,7 +303,7 @@ class Evolution {
 //        };
 //    }
 
-    public Individual[] cX(Individual parent1, Individual parent2, int generation) {
+    public Individual[] cycleCrossing(Individual parent1, Individual parent2, int generation) {
         int[] p1 = parent1.getRoute();
         int[] p2 = parent2.getRoute();
         int[] ch1 = new int[p1.length];
