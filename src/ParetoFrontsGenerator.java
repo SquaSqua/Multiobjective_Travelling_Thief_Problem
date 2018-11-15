@@ -1,6 +1,4 @@
-import java.lang.reflect.Array;
 import java.util.ArrayList;
-import java.util.Collections;
 
 class ParetoFrontsGenerator {
 
@@ -139,8 +137,8 @@ class ParetoFrontsGenerator {
     }
 
     private void objectiveSorting(ArrayList<ArrayList<Individual>> paretoFronts) {
-        for(int i = 0; i < paretoFronts.size(); i++) {
-            paretoFronts.get(i).sort(new ObjectiveFrontComparator());
+        for (ArrayList<Individual> paretoFront : paretoFronts) {
+            paretoFront.sort(new ObjectiveFrontComparator());
         }
     }
 
@@ -165,8 +163,7 @@ class ParetoFrontsGenerator {
         double sumED = 0;
         ArrayList<Individual> paretoFront = paretoFronts.get(0);
         paretoFront.sort(new ObjectiveFrontComparator());
-        for(int i = 0; i < paretoFront.size(); i++) {
-            Individual ind = paretoFront.get(i);
+        for (Individual ind : paretoFront) {
             sumED += Math.sqrt((long) (int) ((ind.getFitnessTime() - ideal.x)
                     * (ind.getFitnessTime() - ideal.x) + (ind.getFitnessWage() - ideal.y)
                     * (ind.getFitnessWage() - ideal.y)));
@@ -184,11 +181,10 @@ class ParetoFrontsGenerator {
         paretoFront.sort(new ObjectiveFrontComparator());
         long hyperVolume = 0L;
         double lastY = nadir.y;
-        for(int i = 0; i < paretoFront.size(); i++) {
-            Individual ind = paretoFront.get(i);
-            hyperVolume += ((int)((nadir.x - ind.getFitnessTime())
+        for (Individual ind : paretoFront) {
+            hyperVolume += ((int) ((nadir.x - ind.getFitnessTime())
                     * (lastY - ind.getFitnessWage())));
-            lastY = paretoFront.get(i).getFitnessWage();
+            lastY = ind.getFitnessWage();
         }
         return hyperVolume;
     }

@@ -1,18 +1,10 @@
-import java.io.BufferedReader;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.util.*;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 class Evolution {
 
-    private String definitionFile;
     private int dimension;
-    private double[][] cities;
 
-    //    private GreedyPackingPlan greedy;
-    public GreedyPackingPlan greedy;
+        private GreedyPackingPlan greedy;
     private ParetoFrontsGenerator paretoGenerator;
 
     private int popSize;
@@ -23,68 +15,27 @@ class Evolution {
 
     private ArrayList<Individual> population = new ArrayList<>();
 
-    //just for a try
     private String measures = "", firstPop = "\nFirst population\n", lastPop = "\nLast population\n";
     private StringBuilder sBMeasures = new StringBuilder(measures);
     private StringBuilder sBFirstPop = new StringBuilder(firstPop);
     private StringBuilder sBLastPop = new StringBuilder(lastPop);
 
     Evolution(String definitionFile, int popSize, int numOfGeners, int tournamentSize, double crossProb, double mutProb) {
-        this.definitionFile = definitionFile;
-        readParameters();
-
         this.popSize = popSize;
         this.numOfGeners = numOfGeners;
         this.tournamentSize = tournamentSize;
         this.crossProb = crossProb;
         this.mutProb = mutProb;
+
+        readParameters(definitionFile);
     }
 
-    private void readParameters() {
-        BufferedReader reader;
-        int[][] items;
-        int capacity;
-        int numOfItems;
-        double minSpeed;
-        double maxSpeed;
-        try {
-            reader = new BufferedReader(new FileReader(definitionFile));
-            reader.readLine();//PROBLEM NAME
-            reader.readLine();//KNAPSACK DATA TYPE
-            dimension = (int) getNumber(reader.readLine());
-            numOfItems = (int) getNumber(reader.readLine());
-            capacity = (int) getNumber(reader.readLine());
-            minSpeed = getNumber(reader.readLine());
-            maxSpeed = getNumber(reader.readLine());
-            reader.readLine();//RENTING RATIO
-            reader.readLine();//EDGE_WEIGHT_TYPE
-            reader.readLine();//NODE_COORD_SECTION...
-            cities = new double[dimension][3];
-            items = new int[numOfItems][4];
-            for (int i = 0; i < dimension; i++) {//filling out cities array
-                StringTokenizer st = new StringTokenizer(reader.readLine(), " \t");
-                for (int j = 0; j < 3; j++) {
-                    cities[i][j] = Double.parseDouble(st.nextToken());
-                }
-            }
-            reader.readLine();
-            double[][] distances = createDistancesArray();
-            for (int i = 0; i < numOfItems; i++) {//filling out items array
-                StringTokenizer st = new StringTokenizer(reader.readLine(), " \t");
-                for (int j = 0; j < 4; j++) {
-                    items[i][j] = Integer.parseInt(st.nextToken());
-                }
-                Point ideal = countPoint(true, distances, dimension, items);
-                Point nadir = countPoint(false, distances, dimension, items);
-                paretoGenerator = new ParetoFrontsGenerator(ideal, nadir);
-            }
-            greedy = new GreedyPackingPlan(minSpeed, maxSpeed, capacity, dimension, distances, items);
-        } catch (FileNotFoundException fnfe) {
-            System.out.println("A file doesn't exist or is in use now!");
-        } catch (Exception e) {
-            System.out.println("An error has occurred while reading data: " + e);
-        }
-
+    private void readParameters(String definitionFile) {
+        ConfigurationProvider configProvider = new ConfigurationProvider();
+        Configuration config = configProvider.readFile(definitionFile);
+        greedy = new GreedyPackingPlan(config);
+        dimension = config.getDimension();
+        paretoGenerator = new ParetoFrontsGenerator(config.getIdeal(), config.getNadir());
     }
 
     String evolve() {
@@ -97,11 +48,11 @@ class Evolution {
             pareto = paretoGenerator.generateFrontsWithAssignments(population);
             population = chooseNextGeneration(pareto);
             if(generation == 1) {
-                printPopulation(sBFirstPop);
+                appendPopulationToStringBuilder(sBFirstPop);
             }
         }
         statistics(pareto);
-        printPopulation(sBLastPop);
+        appendPopulationToStringBuilder(sBLastPop);
         sBFirstPop.append(sBLastPop);
         sBMeasures.append(sBFirstPop);
         measures = sBMeasures.toString();
@@ -151,54 +102,6 @@ class Evolution {
         return children;
     }
 
-    //for time as y and wage as x
-    private Point countPoint(boolean isIdeal, double[][] distances, int dimension, int[][] items) {
-        double time;
-        int wage;
-        Point point;
-        if (isIdeal) {
-            time = Double.MAX_VALUE;
-            wage = Integer.MIN_VALUE;
-            for (int i = 0; i < distances.length; i++) {
-                for (int j = i + 1; j < distances[i].length; j++) {
-                    if (time > distances[i][j] && distances[i][j] != 0) {
-                        time = distances[i][j];
-                    }
-                }
-            }
-            for (int[] item : items) {
-                if (wage < item[1]) {
-                    wage = item[1];
-                }
-            }
-            point = new Point(wage * items.length, time * dimension);
-        } else {
-            time = Double.MIN_VALUE;
-            wage = Integer.MAX_VALUE;
-            for (int i = 0; i < distances.length; i++) {
-                for (int j = i + 1; j < distances[i].length; j++) {
-                    if (time > distances[i][j] && distances[i][j] != 0) {
-                        time = distances[i][j];
-                    }
-                }
-            }
-            for (int[] item : items) {
-                if (wage > item[1]) {
-                    wage = item[1];
-                }
-            }
-            point = new Point(wage * items.length, time * dimension);
-        }
-        return point;
-    }
-
-    private double getNumber(String line) {
-        Pattern p = Pattern.compile("\\d+(\\.\\d+)?");
-        Matcher m = p.matcher(line);
-        m.find();
-        return Double.parseDouble(m.group());
-    }
-
     private void initialize() {
         for (int i = 0; i < popSize; i++) {
             population.add(generateRandomInd());
@@ -241,69 +144,7 @@ class Evolution {
         return bestIndividual;
     }
 
-//    private Individual[] crossOver(Individual parent1, Individual parent2) {
-//        int[] parent1Route = parent1.getRoute();
-//        int[] parent2Route = parent2.getRoute();
-//
-//        int[] child1 = new int[parent1Route.length];
-//        int[] child2 = new int[parent1Route.length];
-//        if(Math.random() < crossProb) {
-//            int crossPoint = new Random().nextInt(parent1Route.length);
-//            for(int i = 0; i < crossPoint; i++) {
-//                child1[i] = parent1Route[i];
-//                child2[i] = parent2Route[i];
-//            }
-//            //rest for parent1
-//            boolean used = false;
-//            int from = 0;
-//            for(int empty = crossPoint; empty < child1.length - 1;) {
-//                for(int j = 0; j < empty; j++) {
-//                    if(child1[j] == parent2Route[from]){
-//                        used = true;
-//                        break;
-//                    }
-//                }
-//                if(!used) {
-//                    child1[empty] = parent2Route[from];
-//                    empty++;
-//                }
-//                used = false;
-//                from++;
-//            }
-//            child1[parent1Route.length - 1] = child1[0];
-//
-//            //rest for parent2
-//            used = false;
-//            from = 0;
-//            for(int empty = crossPoint; empty < child2.length - 1;) {
-//                for(int j = 0; j < empty; j++) {
-//                    if(child2[j] == parent1Route[from]){
-//                        used = true;
-//                        break;
-//                    }
-//                }
-//                if(!used) {
-//                    child2[empty] = parent1Route[from];
-//                    empty++;
-//                }
-//                used = false;
-//                from++;
-//            }
-//            child2[parent2Route.length - 1] = child2[0];
-//        }
-//        else {
-//            for(int i = 0; i < child1.length; i++) {
-//                child1[i] = parent1Route[i];
-//                child2[i] = parent2Route[i];
-//            }
-//        }
-//        return new Individual[] {
-//                new Individual(child1, mutProb),
-//                new Individual(child2, mutProb)
-//        };
-//    }
-
-    public Individual[] cycleCrossing(Individual parent1, Individual parent2, int generation) {
+    private Individual[] cycleCrossing(Individual parent1, Individual parent2, int generation) {
         int[] p1 = parent1.getRoute();
         int[] p2 = parent2.getRoute();
         int[] ch1 = new int[p1.length];
@@ -369,9 +210,7 @@ class Evolution {
 
     private int[] addLastCity(int[] child) {
         int[] ch = new int[child.length + 1];
-        for (int i = 0; i < child.length; i++) {
-            ch[i] = child[i];
-        }
+        System.arraycopy(child, 0, ch, 0, child.length);
         ch[ch.length - 1] = ch[0];
         return ch;
     }
@@ -398,24 +237,6 @@ class Evolution {
         return index;
     }
 
-    private double[][] createDistancesArray() {
-        double[][] distances = new double[dimension][dimension];
-        for (int i = 0; i < dimension; i++) {
-            for (int j = 0; j < dimension; j++) {
-                double distance;
-                if (i == j) {
-                    distance = 0;
-                } else {
-                    distance = Math.sqrt(Math.abs(cities[i][1] - cities[j][1])
-                            + Math.abs(cities[i][2] - cities[j][2]));
-                }
-                distances[i][j] = distance;
-                distances[j][i] = distance;//redundant
-            }
-        }
-        return distances;
-    }
-
     private void statistics(ArrayList<ArrayList<Individual>> pareto) {
         sBMeasures.append(paretoGenerator.ED_measure(pareto)).append(", ")
                 .append(paretoGenerator.PFS_measure(pareto)).append(", ")
@@ -423,7 +244,7 @@ class Evolution {
         sBMeasures.append("\n");
     }
 
-    private String printPopulation(StringBuilder sB) {
+    private void appendPopulationToStringBuilder(StringBuilder sB) {
         int currentRank = 0;
         sB.append("Czas podrozy").append(", ").append("Zarobek").append(", ").append("Stworzony w generacji\n");
         for (Individual i : population) {
@@ -435,30 +256,29 @@ class Evolution {
 //                    .append(Arrays.toString(i.getRoute())).append(", ").append(Arrays.toString(i.getPackingPlan()));
             sB.append("\n");
         }
-        return sB.toString();
     }
 
     //nie dziala bo pareto jest juz modyfikowane przy chooseNextGeneration
     //da sie latwo naprawic wywolujac jeszcze raz generateFronts na populacji i przekazujac to nowe pareto,
     //ale zwyczajnie sie to nie oplaca
-    private String printPopulationHorizontally(StringBuilder sB, ArrayList<ArrayList<Individual>> pareto) {
-        int maxLength = 0;
-        for (int i = 0; i < pareto.size(); i++) {
-            ArrayList<Individual> currentFront = pareto.get(i);
-            if (maxLength < currentFront.size()) {
-                maxLength = currentFront.size();
-            }
-        }
-        for (int i = 0; i < 1/*maxLength*/; i++) {//number of row
-            for (int j = 0; j < pareto.size(); j++) {//j - number of front
-                if (pareto.get(j).size() <= i) {
-                    sB.append(",,");
-                } else {
-                    sB.append(pareto.get(j).get(i).getFitnessTime()).append(", ").append(pareto.get(j).get(i).getFitnessWage()).append(", ");
-                }
-            }
-            sB.append("\n");
-        }
-        return sB.toString();
-    }
+//    private String printPopulationHorizontally(StringBuilder sB, ArrayList<ArrayList<Individual>> pareto) {
+//        int maxLength = 0;
+//        for (int i = 0; i < pareto.size(); i++) {
+//            ArrayList<Individual> currentFront = pareto.get(i);
+//            if (maxLength < currentFront.size()) {
+//                maxLength = currentFront.size();
+//            }
+//        }
+//        for (int i = 0; i < 1/*maxLength*/; i++) {//number of row
+//            for (int j = 0; j < pareto.size(); j++) {//j - number of front
+//                if (pareto.get(j).size() <= i) {
+//                    sB.append(",,");
+//                } else {
+//                    sB.append(pareto.get(j).get(i).getFitnessTime()).append(", ").append(pareto.get(j).get(i).getFitnessWage()).append(", ");
+//                }
+//            }
+//            sB.append("\n");
+//        }
+//        return sB.toString();
+//    }
 }

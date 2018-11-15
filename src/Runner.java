@@ -6,7 +6,7 @@ public class Runner {
     public static void main(String[] args) {
 
         long start = System.currentTimeMillis();
-        Evolution population = new Evolution("src/definitionFiles/hard_3.ttp", 150, 300,
+        Evolution population = new Evolution("src/definitionFiles/hard_3.ttp", 10, 10,
                 6, 0.5, 0.2);
 
         Date date = new Date();

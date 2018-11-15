@@ -10,14 +10,14 @@ class GreedyPackingPlan {
     private int[][] items;
     private Integer[][] groupedItems;
 
-    GreedyPackingPlan(double minSpeed, double maxSpeed, int capacity, int dimension, double[][] distances, int[][] items) {
-        this.maxSpeed = maxSpeed;
-        this.capacity = capacity;
-        this.dimension = dimension;
-        this.distances = distances;
-        this.items = items;
+    GreedyPackingPlan(Configuration config) {
+        this.maxSpeed = config.getMaxSpeed();
+        this.capacity = config.getCapacity();
+        this.dimension = config.getDimension();
+        this.distances = config.getDistances();
+        this.items = config.getItems();
 
-        coefficient = (maxSpeed - minSpeed) / capacity;
+        coefficient = (maxSpeed - config.getMinSpeed()) / capacity;
         createGroupedItemsArray();
     }
 
@@ -77,17 +77,13 @@ class GreedyPackingPlan {
         }
         gainOfItems.sort((double[] o1, double[] o2) ->
                 o2[1] - o1[1] < 0 ? -1 : o2[1] > 0 ? 1 : 0);
-            for(double[] i : gainOfItems) {
-//            System.out.println(i[0] + ": " + i[1]);
-        }//just for debugging
 
         return gainOfItems;
     }
 
-    Individual setFitnessForIndividual(Individual individual) {
+    void setFitnessForIndividual(Individual individual) {
         countFitnessTime(individual);
         countFitnessWage(individual);
-        return individual;
     }
 
     private void countFitnessWage(Individual individual) {
