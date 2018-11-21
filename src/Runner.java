@@ -1,17 +1,20 @@
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;
-import java.util.Date;
+import java.time.LocalDate;
+import java.time.LocalTime;
 
 public class Runner {
     public static void main(String[] args) {
 
         long start = System.currentTimeMillis();
-        Evolution population = new Evolution("src/definitionFiles/hard_3.ttp", 10, 10,
-                6, 0.5, 0.2);
+        ConfigurationProvider configProvider = new ConfigurationProvider();
+        Configuration config = configProvider.readFile("src/definitionFiles/hard_3.ttp");
+        Evolution population = new Evolution(config, 100, 250, 6, 0.5, 0.2);
 
-        Date date = new Date();
-        String dateAndTime = date.getMonth() + "_"  + date.getDay()
-                + "_" + date.getHours() + "_" + date.getMinutes() + "_" + date.getSeconds();
+        LocalDate date = LocalDate.now();
+        LocalTime time = LocalTime.now();
+        String dateAndTime = date.getMonth() + "_"  + date.getDayOfWeek()
+                + "_" + time.getHour() + "_" + time.getMinute() + "_" + time.getSecond();
         String results = "results_" + dateAndTime + ".csv";
         try
         {

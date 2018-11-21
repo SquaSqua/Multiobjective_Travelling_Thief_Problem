@@ -16,9 +16,18 @@ class Individual {
 
     Individual(int[] route, double mutProb, int birthday) {
         this.route = route;
+        packingPlan = null;
         this.mutProb = mutProb;
         this.birthday = birthday;
+    }
+
+    Individual(int[] route) {
+        this.route = route;
         packingPlan = null;
+    }
+
+    Individual() {
+
     }
 
     void mutation(GreedyPackingPlan greedy) {
@@ -33,7 +42,6 @@ class Individual {
         route[route.length - 1] = route[0];
 
         setPackingPlanAndFitness(greedy);
-//        System.out.println(Arrays.toString(packingPlan));
     }
 
     int compareTo(Individual o) {

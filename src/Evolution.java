@@ -3,41 +3,43 @@ import java.util.*;
 class Evolution {
 
     private int dimension;
-
-        private GreedyPackingPlan greedy;
-    private ParetoFrontsGenerator paretoGenerator;
-
     private int popSize;
     private int numOfGeners;
     private double crossProb;
     private double mutProb;
     private int tournamentSize;
+    private GreedyPackingPlan greedy;
+    private ParetoFrontsGenerator paretoGenerator;
 
     private ArrayList<Individual> population = new ArrayList<>();
 
-    private String measures = "", firstPop = "\nFirst population\n", lastPop = "\nLast population\n";
+    private String measures = "", firstPopFront = "\nFirst population front\n",
+            middlePopFront = "\nMiddle population front\n", lastPopFront = "\nLast population front\n";
     private StringBuilder sBMeasures = new StringBuilder(measures);
-    private StringBuilder sBFirstPop = new StringBuilder(firstPop);
-    private StringBuilder sBLastPop = new StringBuilder(lastPop);
+    private StringBuilder sBFirstPopFront = new StringBuilder(firstPopFront);
+    private StringBuilder sBMiddlePopFront = new StringBuilder(middlePopFront);
+    private StringBuilder sBLastPopFront = new StringBuilder(lastPopFront);
 
-    Evolution(String definitionFile, int popSize, int numOfGeners, int tournamentSize, double crossProb, double mutProb) {
+    Evolution(Configuration config, int popSize, int numOfGeners, int tournamentSize, double crossProb, double mutProb) {
         this.popSize = popSize;
         this.numOfGeners = numOfGeners;
         this.tournamentSize = tournamentSize;
         this.crossProb = crossProb;
         this.mutProb = mutProb;
 
-        readParameters(definitionFile);
+        readParameters(config);
     }
 
-    private void readParameters(String definitionFile) {
-        ConfigurationProvider configProvider = new ConfigurationProvider();
-        Configuration config = configProvider.readFile(definitionFile);
+    private void readParameters(Configuration config) {
         greedy = new GreedyPackingPlan(config);
         dimension = config.getDimension();
         paretoGenerator = new ParetoFrontsGenerator(config.getIdeal(), config.getNadir());
     }
 
+    /**
+     * cos robi
+     * @return zwraca...
+     */
     String evolve() {
 
         ArrayList<ArrayList<Individual>> pareto = new ArrayList<>();
@@ -48,34 +50,52 @@ class Evolution {
             pareto = paretoGenerator.generateFrontsWithAssignments(population);
             population = chooseNextGeneration(pareto);
             if(generation == 1) {
-                appendPopulationToStringBuilder(sBFirstPop);
+//                appendPopulationToStringBuilder(sBFirstPopFront);
+                appendParetoFrontToStringBuilder(sBFirstPopFront);
+                statistics(pareto);
+            }
+
+            //added for temporary use
+            if(generation == numOfGeners / 10) {
+//                appendPopulationToStringBuilder(sBFirstPopFront);
+                appendParetoFrontToStringBuilder(sBMiddlePopFront);
+                statistics(pareto);
+            }
+            if(generation == numOfGeners / 2) {
+//                appendPopulationToStringBuilder(sBFirstPopFront);
+                appendParetoFrontToStringBuilder(sBMiddlePopFront);
+                statistics(pareto);
             }
         }
         statistics(pareto);
-        appendPopulationToStringBuilder(sBLastPop);
-        sBFirstPop.append(sBLastPop);
-        sBMeasures.append(sBFirstPop);
+        appendParetoFrontToStringBuilder(sBLastPopFront);
+        sBMiddlePopFront.append(sBLastPopFront);
+        sBFirstPopFront.append(sBMiddlePopFront);
+        sBMeasures.append(sBFirstPopFront);
         measures = sBMeasures.toString();
         return measures;
     }
 
-    private ArrayList<Individual> chooseNextGeneration(ArrayList<ArrayList<Individual>> pareto) {
-        ArrayList<Individual> nextGeneration = new ArrayList<>();
-        while (nextGeneration.size() < popSize) {
-            if (pareto.get(0).size() <= popSize - nextGeneration.size()) {
-                nextGeneration.addAll(pareto.get(0));
-                pareto.remove(0);
-            } else {
-                ArrayList<Individual> firstFront = pareto.get(0);
-                firstFront.sort(new CrowdingDistanceComparator());
-                for (Individual ind : firstFront) {
-                    if (nextGeneration.size() < popSize) {
-                        nextGeneration.add(ind);
-                    }
-                }
-            }
+    private void initialize() {
+        for (int i = 0; i < popSize; i++) {
+            population.add(generateRandomIndividual());
         }
-        return nextGeneration;
+    }
+
+    private Individual generateRandomIndividual() {
+        int[] route = new int[dimension + 1];
+        ArrayList<Integer> routeList = new ArrayList<>();
+        for (int i = 0; i < dimension; i++) {
+            routeList.add(i);
+        }
+        Collections.shuffle(routeList);
+        for (int i = 0; i < dimension; i++) {
+            route[i] = routeList.get(i);
+        }
+        route[dimension] = route[0];
+        Individual ind = new Individual(route, mutProb, 0);
+        ind.setPackingPlanAndFitness(greedy);
+        return ind;
     }
 
     private ArrayList<Individual> generateOffspring(int generation) {
@@ -95,33 +115,9 @@ class Evolution {
         Individual parent1 = tournament();
         Individual parent2 = tournament();
         Individual[] children = cycleCrossing(parent1, parent2, generation);
-//        children[0].setPackingPlanAndFitness(greedy);//tu cos sie zmienia
-//        System.out.println(Arrays.toString(children[0].getPackingPlan()));
         children[0].mutation(greedy);
         children[1].mutation(greedy);
         return children;
-    }
-
-    private void initialize() {
-        for (int i = 0; i < popSize; i++) {
-            population.add(generateRandomInd());
-        }
-    }
-
-    private Individual generateRandomInd() {
-        int[] route = new int[dimension + 1];
-        ArrayList<Integer> routeList = new ArrayList<>();
-        for (int i = 0; i < dimension; i++) {
-            routeList.add(i);
-        }
-        Collections.shuffle(routeList);
-        for (int i = 0; i < dimension; i++) {
-            route[i] = routeList.get(i);
-        }
-        route[dimension] = route[0];
-        Individual ind = new Individual(route, mutProb, 0);
-        ind.setPackingPlanAndFitness(greedy);
-        return ind;
     }
 
     private Individual tournament() {
@@ -198,6 +194,25 @@ class Evolution {
         };
     }
 
+    private ArrayList<Individual> chooseNextGeneration(ArrayList<ArrayList<Individual>> pareto) {
+        ArrayList<Individual> nextGeneration = new ArrayList<>();
+        while (nextGeneration.size() < popSize) {
+            if (pareto.get(0).size() <= popSize - nextGeneration.size()) {
+                nextGeneration.addAll(pareto.get(0));
+                pareto.remove(0);
+            } else {
+                ArrayList<Individual> firstFront = pareto.get(0);
+                firstFront.sort(new CrowdingDistanceComparator());
+                for (Individual ind : firstFront) {
+                    if (nextGeneration.size() < popSize) {
+                        nextGeneration.add(ind);
+                    }
+                }
+            }
+        }
+        return nextGeneration;
+    }
+
     private void assignGens(boolean isSwapTurn, int currentInd, int[] route1, int[] route2, int[] child1, int[] child2) {
         if (!isSwapTurn) {
             child1[currentInd] = route1[currentInd];
@@ -255,6 +270,17 @@ class Evolution {
             sB.append(i.getFitnessTime()).append(", ").append(i.getFitnessWage()).append(", ").append(i.getBirthday());
 //                    .append(Arrays.toString(i.getRoute())).append(", ").append(Arrays.toString(i.getPackingPlan()));
             sB.append("\n");
+        }
+    }
+
+    private void appendParetoFrontToStringBuilder(StringBuilder sB) {
+        sB.append("Czas podrozy").append(", ").append("Zarobek").append(", ").append("Stworzony w generacji\n");
+        for (Individual i : population) {
+            if (i.getRank() == 0) {
+                sB.append(i.getFitnessTime()).append(", ").append(i.getFitnessWage()).append(", ").append(i.getBirthday());
+//                    .append(Arrays.toString(i.getRoute())).append(", ").append(Arrays.toString(i.getPackingPlan()));
+                sB.append("\n");
+            }
         }
     }
 
