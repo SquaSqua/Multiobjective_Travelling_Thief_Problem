@@ -6,6 +6,16 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 class ConfigurationProvider {
+    public static final char INDEX_OF_CITY = 0;
+    public static final char COORDINATE_X_OF_CITY = 1;
+    public static final char COORDINATE_Y_OF_CITY = 2;
+    public static final char NUMBER_OF_INFO_PER_CITY = 3;
+
+    public static final char INDEX_OF_ITEM = 0;
+    public static final char PROFIT_FROM_ITEM = 1;
+    public static final char WEIGHT_OF_ITEM = 2;
+    public static final char CITY_OF_ITEM = 3;
+    public static final char NUMBER_OF_INFO_PER_ITEM = 4;
 
     Configuration readFile(String definitionFile) {
         Configuration config = new Configuration();
@@ -28,20 +38,20 @@ class ConfigurationProvider {
             config.setRentingRatio(getNumber(reader.readLine()));
             reader.readLine();//EDGE_WEIGHT_TYPE
             reader.readLine();//NODE_COORD_SECTION...
-            cities = new double[dimension][3];//0. - index, 1. - x, 2. - y
+            cities = new double[dimension][NUMBER_OF_INFO_PER_CITY];
             for (int i = 0; i < dimension; i++) {//filling out cities array
                 StringTokenizer st = new StringTokenizer(reader.readLine(), " \t");
-                for(int j = 0; j < 3; j++) {
+                for(int j = 0; j < NUMBER_OF_INFO_PER_CITY; j++) {
                     cities[i][j] = Double.parseDouble(st.nextToken());
                 }
             }
             distances = createDistancesArray(dimension, cities);
             config.setDistances(distances);
             reader.readLine();
-            items = new int[numOfItems][4];//0. - INDEX, 1. - PROFIT, 2. - WEIGHT, 3. - ASSIGNED NODE NUMBER
+            items = new int[numOfItems][NUMBER_OF_INFO_PER_ITEM];
             for (int i = 0; i < numOfItems; i++) {//filling out items array
                 StringTokenizer st = new StringTokenizer(reader.readLine(), " \t");
-                for(int j = 0; j < 4; j++) {
+                for(int j = 0; j < NUMBER_OF_INFO_PER_ITEM; j++) {
                     items[i][j] = Integer.parseInt(st.nextToken());
                 }
             }
@@ -64,8 +74,8 @@ class ConfigurationProvider {
                 if (i == j) {
                     distance = 0;
                 } else {
-                    distance = Math.sqrt(Math.abs(cities[i][1] - cities[j][1])
-                            + Math.abs(cities[i][2] - cities[j][2]));
+                    distance = Math.sqrt(Math.abs(cities[i][COORDINATE_X_OF_CITY] - cities[j][COORDINATE_X_OF_CITY])
+                            + Math.abs(cities[i][COORDINATE_Y_OF_CITY] - cities[j][COORDINATE_Y_OF_CITY]));
                 }
                 distances[i][j] = distance;
                 distances[j][i] = distance;//redundant
@@ -97,8 +107,8 @@ class ConfigurationProvider {
                 }
             }
             for (int[] item : items) {
-                if (wage < item[1]) {
-                    wage = item[1];
+                if (wage < item[PROFIT_FROM_ITEM]) {
+                    wage = item[PROFIT_FROM_ITEM];
                 }
             }
             point = new Point(wage * items.length, time * dimension);
@@ -113,8 +123,8 @@ class ConfigurationProvider {
                 }
             }
             for (int[] item : items) {
-                if (wage > item[1]) {
-                    wage = item[1];
+                if (wage > item[PROFIT_FROM_ITEM]) {
+                    wage = item[PROFIT_FROM_ITEM];
                 }
             }
             point = new Point(wage * items.length, time * dimension);

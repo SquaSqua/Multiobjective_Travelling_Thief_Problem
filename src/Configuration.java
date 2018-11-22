@@ -5,6 +5,7 @@ public class Configuration {
     private double minSpeed;
     private double maxSpeed;
     private double rentingRatio;
+
     private double[][] distances;
     private int[][] items;
     private Point ideal, nadir;

@@ -9,7 +9,7 @@ public class Runner {
         long start = System.currentTimeMillis();
         ConfigurationProvider configProvider = new ConfigurationProvider();
         Configuration config = configProvider.readFile("src/definitionFiles/hard_3.ttp");
-        Evolution population = new Evolution(config, 100, 250, 6, 0.5, 0.2);
+        Evolution population = new Evolution(config, 100, 50, 6, 0.5, 0.2);
 
         LocalDate date = LocalDate.now();
         LocalTime time = LocalTime.now();
@@ -28,36 +28,5 @@ public class Runner {
         }
         long milliseconds = System.currentTimeMillis() - start;
         System.out.println(milliseconds / 1000 + "." + milliseconds % 1000 + "s");
-//        ArrayList<Individual> pop = new ArrayList<>();
-//        for(int i = 0; i < 7; i++) {
-//            pop.add(new Individual(new int[] {1,2},1,1));
-//        }
-//
-//        pop.get(0).setFitnessTime(40);
-//        pop.get(1).setFitnessTime(20);
-//        pop.get(2).setFitnessTime(10);
-//        pop.get(3).setFitnessTime(60);
-//        pop.get(4).setFitnessTime(45);
-//        pop.get(5).setFitnessTime(25);
-//        pop.get(6).setFitnessTime(15);
-//
-//        pop.get(0).setFitnessWage(10);
-//        pop.get(1).setFitnessWage(25);
-//        pop.get(2).setFitnessWage(40);
-//        pop.get(3).setFitnessWage(20);
-//        pop.get(4).setFitnessWage(45);
-//        pop.get(5).setFitnessWage(60);
-//        pop.get(6).setFitnessWage(80);
-//
-//        ParetoFrontsGenerator p = new ParetoFrontsGenerator(new Point(1,1), new Point(1,1));
-//        p.generateFrontsWithAssignments(pop);
-//        Individual ind = new Individual(new int[] {1,2},1,1);
-//        ind.setFitnessWage(15);
-//        ind.setFitnessTime(20);
-//        pop.add(ind);
-//        p.generateFrontsWithAssignments(pop);
-//        pop.toArray();
-
-
     }
 }

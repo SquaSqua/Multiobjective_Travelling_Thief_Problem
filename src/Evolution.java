@@ -78,24 +78,9 @@ class Evolution {
 
     private void initialize() {
         for (int i = 0; i < popSize; i++) {
-            population.add(generateRandomIndividual());
+            population.add(new Individual(dimension));
+            population.get(population.size() - 1).setPackingPlanAndFitness(greedy);
         }
-    }
-
-    private Individual generateRandomIndividual() {
-        int[] route = new int[dimension + 1];
-        ArrayList<Integer> routeList = new ArrayList<>();
-        for (int i = 0; i < dimension; i++) {
-            routeList.add(i);
-        }
-        Collections.shuffle(routeList);
-        for (int i = 0; i < dimension; i++) {
-            route[i] = routeList.get(i);
-        }
-        route[dimension] = route[0];
-        Individual ind = new Individual(route, mutProb, 0);
-        ind.setPackingPlanAndFitness(greedy);
-        return ind;
     }
 
     private ArrayList<Individual> generateOffspring(int generation) {
@@ -113,10 +98,9 @@ class Evolution {
     //at this point population is already filled out with rank and crowding distance
     private Individual[] matingPool(int generation) {
         Individual parent1 = tournament();
-        Individual parent2 = tournament();
-        Individual[] children = cycleCrossing(parent1, parent2, generation);
-        children[0].mutation(greedy);
-        children[1].mutation(greedy);
+        Individual[] children = parent1.cycleCrossing(tournament(), crossProb, generation);
+        children[0].mutation(greedy, mutProb);
+        children[1].mutation(greedy, mutProb);
         return children;
     }
 
@@ -140,60 +124,6 @@ class Evolution {
         return bestIndividual;
     }
 
-    private Individual[] cycleCrossing(Individual parent1, Individual parent2, int generation) {
-        int[] p1 = parent1.getRoute();
-        int[] p2 = parent2.getRoute();
-        int[] ch1 = new int[p1.length];
-        int[] ch2 = new int[p1.length];
-
-        if (Math.random() < crossProb) {
-            int[] route1 = new int[p1.length - 1];
-            int[] route2 = new int[p1.length - 1];
-            for (int i = 0; i < route1.length; i++) {
-                route1[i] = p1[i];
-                route2[i] = p2[i];
-            }
-            int[] child1 = new int[route1.length];
-            int[] child2 = new int[route2.length];
-
-            for (int i = 0; i < child1.length; i++) {
-                child1[i] = -1;
-                child2[i] = -1;
-            }
-            int beginningValue = route1[0];
-            int currentInd = 0;
-
-            boolean isSwapTurn = false;
-            while (true) {
-                assignGens(isSwapTurn, currentInd, route1, route2, child1, child2);
-                if (route1[currentInd] == route2[currentInd]) {
-                    isSwapTurn = !isSwapTurn;
-                }
-                currentInd = findIndexOfaValue(route2[currentInd], route1);
-                if (route2[currentInd] == beginningValue) {
-                    assignGens(isSwapTurn, currentInd, route1, route2, child1, child2);
-                    currentInd = findFirstEmpty(child1);
-                    if (currentInd == -1) {
-                        break;
-                    }
-                    beginningValue = route1[currentInd];
-                    isSwapTurn = !isSwapTurn;
-                }
-            }
-            ch1 = addLastCity(child1);
-            ch2 = addLastCity(child2);
-        } else {
-            for (int i = 0; i < ch1.length; i++) {
-                ch1[i] = p1[i];
-                ch2[i] = p2[i];
-            }
-        }
-        return new Individual[]{
-                new Individual(ch1, mutProb, generation),
-                new Individual(ch2, mutProb, generation)
-        };
-    }
-
     private ArrayList<Individual> chooseNextGeneration(ArrayList<ArrayList<Individual>> pareto) {
         ArrayList<Individual> nextGeneration = new ArrayList<>();
         while (nextGeneration.size() < popSize) {
@@ -211,45 +141,6 @@ class Evolution {
             }
         }
         return nextGeneration;
-    }
-
-    private void assignGens(boolean isSwapTurn, int currentInd, int[] route1, int[] route2, int[] child1, int[] child2) {
-        if (!isSwapTurn) {
-            child1[currentInd] = route1[currentInd];
-            child2[currentInd] = route2[currentInd];
-        } else {
-            child1[currentInd] = route2[currentInd];
-            child2[currentInd] = route1[currentInd];
-        }
-    }
-
-    private int[] addLastCity(int[] child) {
-        int[] ch = new int[child.length + 1];
-        System.arraycopy(child, 0, ch, 0, child.length);
-        ch[ch.length - 1] = ch[0];
-        return ch;
-    }
-
-    private int findFirstEmpty(int[] route) {
-        int firstEmpty = -1;
-        for (int i = 0; i < route.length; i++) {
-            if (route[i] == -1) {
-                firstEmpty = i;
-                break;
-            }
-        }
-        return firstEmpty;
-    }
-
-    private int findIndexOfaValue(int value, int[] route) {
-        int index = -1;
-        for (int i = 0; i < route.length; i++) {
-            if (route[i] == value) {
-                index = i;
-                break;
-            }
-        }
-        return index;
     }
 
     private void statistics(ArrayList<ArrayList<Individual>> pareto) {

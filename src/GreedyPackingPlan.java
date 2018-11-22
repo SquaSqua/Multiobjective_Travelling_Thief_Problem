@@ -72,8 +72,10 @@ class GreedyPackingPlan {
         ArrayList<double[]> gainOfItems = new ArrayList<>();
         for(int i = 0; i < items.length; i++) {
             int[] currentRow = items[i];
-            gainOfItems.add(new double[] {i, currentRow[1] /
-                    (currentRow[2] * countTime(route, currentRow[3], countSpeed(currentRow[2])))});
+            gainOfItems.add(new double[] {i, currentRow[ConfigurationProvider.PROFIT_FROM_ITEM] /
+                    (currentRow[ConfigurationProvider.WEIGHT_OF_ITEM]
+                            * countTime(route, currentRow[ConfigurationProvider.CITY_OF_ITEM],
+                            countSpeed(currentRow[ConfigurationProvider.WEIGHT_OF_ITEM])))});
         }
         gainOfItems.sort((double[] o1, double[] o2) ->
                 o2[1] - o1[1] < 0 ? -1 : o2[1] > 0 ? 1 : 0);
@@ -91,7 +93,7 @@ class GreedyPackingPlan {
         int totalWage = 0;
         for(int i = 0; i < packingPlan.length; i++) {
             if(packingPlan[i] == 1) {
-                totalWage += items[i][1];
+                totalWage += items[i][ConfigurationProvider.PROFIT_FROM_ITEM];
             }
         }
         individual.setFitnessWage(totalWage);
@@ -105,8 +107,8 @@ class GreedyPackingPlan {
         for(int currentPosition = 0; currentPosition < route.length - 1; ) {
             Integer[] currentCity = groupedItems[currentPosition];
             for (Integer item : currentCity) {
-                if (packingPlan[item] == 1) {
-                    weight += items[item][2];
+                if (packingPlan[item] == 1) {//taken
+                    weight += items[item][ConfigurationProvider.WEIGHT_OF_ITEM];
                 }
             }
             time += countTime(route, currentPosition, ++currentPosition, countSpeed(weight));
@@ -121,7 +123,7 @@ class GreedyPackingPlan {
             groupedItemsList[i] = new ArrayList<>();
         }
         for (int[] item : items) {
-            groupedItemsList[item[3] - 1].add(item[0] - 1);
+            groupedItemsList[item[ConfigurationProvider.CITY_OF_ITEM] - 1].add(item[ConfigurationProvider.INDEX_OF_ITEM] - 1);
         }
         for(int i = 0; i < dimension; i++) {
             groupedItems[i] = new Integer[groupedItemsList[i].size()];
