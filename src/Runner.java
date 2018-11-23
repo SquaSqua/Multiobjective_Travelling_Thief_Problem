@@ -9,7 +9,7 @@ public class Runner {
         long start = System.currentTimeMillis();
         ConfigurationProvider configProvider = new ConfigurationProvider();
         Configuration config = configProvider.readFile("src/definitionFiles/hard_3.ttp");
-        Evolution population = new Evolution(config, 100, 250, 6, 0.5, 0.2);
+        Evolution population = new Evolution(config, 100, 50, 6, 0.5f, 0.2f);
 
         LocalDate date = LocalDate.now();
         LocalTime time = LocalTime.now();

@@ -4,8 +4,8 @@ import java.util.Random;
 
 class Individual {
 
-    private int[] route;
-    private int[] packingPlan;
+    private short[] route;
+    private boolean[] packingPlan;
     private double fitnessTime;
     private int fitnessWage;
     private int birthday;
@@ -14,26 +14,26 @@ class Individual {
     private double crowdingDistance;
     private int rank;
 
-    private Individual(int[] route, int birthday) {
+    private Individual(short[] route, int birthday) {
         this.route = route;
         packingPlan = null;
         this.birthday = birthday;
     }
 
-    Individual(int[] route) {
+    Individual(short[] route) {
         this.route = route;
         packingPlan = null;
     }
 
     Individual(int dimension) {
-        int[] route = new int[dimension + 1];
+        short[] route = new short[dimension + 1];
         ArrayList<Integer> routeList = new ArrayList<>();
         for (int i = 0; i < dimension; i++) {
             routeList.add(i);
         }
         Collections.shuffle(routeList);
         for (int i = 0; i < dimension; i++) {
-            route[i] = routeList.get(i);
+            route[i] = routeList.get(i).shortValue();
         }
         route[dimension] = route[0];
         this.route = route;
@@ -44,7 +44,7 @@ class Individual {
         for(int i = 0; i < route.length - 1; i++) {
             if(Math.random() < mutProb) {
                 int swapIndex = new Random().nextInt(route.length - 1);
-                int temp = route[i];
+                short temp = route[i];
                 route[i] = route[swapIndex];
                 route[swapIndex] = temp;
             }
@@ -55,19 +55,19 @@ class Individual {
     }
 
     Individual[] cycleCrossing(Individual parent2, double crossProb, int generation) {
-        int[] p2 = parent2.getRoute();
-        int[] ch1 = new int[route.length];
-        int[] ch2 = new int[route.length];
+        short[] p2 = parent2.getRoute();
+        short[] ch1 = new short[route.length];
+        short[] ch2 = new short[route.length];
 
         if (Math.random() < crossProb) {
-            int[] route1 = new int[p2.length - 1];
-            int[] route2 = new int[p2.length - 1];
+            short[] route1 = new short[p2.length - 1];
+            short[] route2 = new short[p2.length - 1];
             for (int i = 0; i < route1.length; i++) {
                 route1[i] = route[i];
                 route2[i] = p2[i];
             }
-            int[] child1 = new int[route1.length];
-            int[] child2 = new int[route2.length];
+            short[] child1 = new short[route1.length];
+            short[] child2 = new short[route2.length];
 
             for (int i = 0; i < child1.length; i++) {
                 child1[i] = -1;
@@ -107,7 +107,7 @@ class Individual {
         };
     }
 
-    private void assignGens(boolean isSwapTurn, int currentInd, int[] route1, int[] route2, int[] child1, int[] child2) {
+    private void assignGens(boolean isSwapTurn, int currentInd, short[] route1, short[] route2, short[] child1, short[] child2) {
         if (!isSwapTurn) {
             child1[currentInd] = route1[currentInd];
             child2[currentInd] = route2[currentInd];
@@ -117,25 +117,25 @@ class Individual {
         }
     }
 
-    private int[] addLastCity(int[] child) {
-        int[] ch = new int[child.length + 1];
+    private short[] addLastCity(short[] child) {
+        short[] ch = new short[child.length + 1];
         System.arraycopy(child, 0, ch, 0, child.length);
         ch[ch.length - 1] = ch[0];
         return ch;
     }
 
-    private int findFirstEmpty(int[] route) {
-        int firstEmpty = -1;
+    private short findFirstEmpty(short[] route) {
+        short firstEmpty = -1;
         for (int i = 0; i < route.length; i++) {
             if (route[i] == -1) {
-                firstEmpty = i;
+                firstEmpty = (short)i;
                 break;
             }
         }
         return firstEmpty;
     }
 
-    private int findIndexOfaValue(int value, int[] route) {
+    private int findIndexOfaValue(int value, short[] route) {
         int index = -1;
         for (int i = 0; i < route.length; i++) {
             if (route[i] == value) {
@@ -147,16 +147,16 @@ class Individual {
     }
 
     int compareTo(Individual o) {
-        return (int) Math.signum((Math.signum(fitnessTime - o.fitnessTime) * -1)+ Math.signum((fitnessWage - o.fitnessWage)));//* -1
+        return (int) Math.signum((Math.signum(fitnessTime - o.fitnessTime) * -1)+ Math.signum((fitnessWage - o.fitnessWage)));
     }
 
 
     //getters
-    int[] getRoute() {
+    short[] getRoute() {
         return route;
     }
 
-    int[] getPackingPlan() {
+    boolean[] getPackingPlan() {
         return packingPlan;
     }
 
@@ -180,7 +180,7 @@ class Individual {
 
 
     //setters
-    void setPackingPlan(int[] packingPlan) {
+    void setPackingPlan(boolean[] packingPlan) {
         this.packingPlan = packingPlan;
     }
 

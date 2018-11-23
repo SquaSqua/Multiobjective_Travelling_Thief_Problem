@@ -6,16 +6,16 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 class ConfigurationProvider {
-    public static final char INDEX_OF_CITY = 0;
-    public static final char COORDINATE_X_OF_CITY = 1;
-    public static final char COORDINATE_Y_OF_CITY = 2;
-    public static final char NUMBER_OF_INFO_PER_CITY = 3;
 
-    public static final char INDEX_OF_ITEM = 0;
-    public static final char PROFIT_FROM_ITEM = 1;
-    public static final char WEIGHT_OF_ITEM = 2;
-    public static final char CITY_OF_ITEM = 3;
-    public static final char NUMBER_OF_INFO_PER_ITEM = 4;
+    private static final char NUMBER_OF_INFO_PER_CITY = 3;
+    private static final char COORDINATE_X_OF_CITY = 1;
+    private static final char COORDINATE_Y_OF_CITY = 2;
+
+    private static final char NUMBER_OF_INFO_PER_ITEM = 4;
+    static final char INDEX_OF_ITEM = 0;
+    static final char PROFIT_FROM_ITEM = 1;
+    static final char WEIGHT_OF_ITEM = 2;
+    static final char CITY_OF_ITEM = 3;
 
     Configuration readFile(String definitionFile) {
         Configuration config = new Configuration();

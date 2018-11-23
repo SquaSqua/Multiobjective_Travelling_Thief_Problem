@@ -21,16 +21,16 @@ class GreedyPackingPlan {
         createGroupedItemsArray();
     }
 
-    private double countTime(int[] route, int startIndex, double currentSpeed) {
+    private double countTime(short[] route, int startIndex, double currentSpeed) {
         int endIndex = route.length - 1;
         return countTime(route, startIndex, endIndex, currentSpeed);
     }
 
-    private double countTime(int[] route, int startIndex, int endIndex, double currentSpeed) {
+    private double countTime(short[] route, int startIndex, int endIndex, double currentSpeed) {
         return countRoad(route, startIndex, endIndex) / currentSpeed;
     }
 
-    private double countRoad(int[] route, int startIndex, int endIndex) {
+    private double countRoad(short[] route, int startIndex, int endIndex) {
         double completeDistance = 0;
         if(endIndex == route.length - 1) {
             for(int i = startIndex; i < endIndex - 1; ) {
@@ -52,15 +52,15 @@ class GreedyPackingPlan {
     }
 
     void settlePackingPlan(Individual individual) {
-        int[] route = individual.getRoute();
+        short[] route = individual.getRoute();
         ArrayList<double[]> gainOfItems = countGain(route);
-        int[] packingPlan = new int[items.length];
+        boolean[] packingPlan = new boolean[items.length];
         int ind = 0;
         int currentWeight = 0;
         while(currentWeight < capacity && ind < gainOfItems.size()) {
             int rowNumber = (int)gainOfItems.get(ind)[0];
             if(items[rowNumber][2] + currentWeight <= capacity) {
-                packingPlan[rowNumber] = 1;
+                packingPlan[rowNumber] = true;
                 currentWeight += items[rowNumber][2];
             }
             ind++;
@@ -68,7 +68,7 @@ class GreedyPackingPlan {
         individual.setPackingPlan(packingPlan);
     }
 
-    private ArrayList<double[]> countGain(int[] route) {
+    private ArrayList<double[]> countGain(short[] route) {
         ArrayList<double[]> gainOfItems = new ArrayList<>();
         for(int i = 0; i < items.length; i++) {
             int[] currentRow = items[i];
@@ -89,10 +89,10 @@ class GreedyPackingPlan {
     }
 
     private void countFitnessWage(Individual individual) {
-        int[] packingPlan = individual.getPackingPlan();
+        boolean[] packingPlan = individual.getPackingPlan();
         int totalWage = 0;
         for(int i = 0; i < packingPlan.length; i++) {
-            if(packingPlan[i] == 1) {
+            if(packingPlan[i] == true) {
                 totalWage += items[i][ConfigurationProvider.PROFIT_FROM_ITEM];
             }
         }
@@ -100,14 +100,14 @@ class GreedyPackingPlan {
     }
 
     private void countFitnessTime(Individual individual) {
-        int[] route = individual.getRoute();
-        int[] packingPlan = individual.getPackingPlan();
+        short[] route = individual.getRoute();
+        boolean[] packingPlan = individual.getPackingPlan();
         double weight = 0;
         double time = 0;
         for(int currentPosition = 0; currentPosition < route.length - 1; ) {
             Integer[] currentCity = groupedItems[currentPosition];
             for (Integer item : currentCity) {
-                if (packingPlan[item] == 1) {//taken
+                if (packingPlan[item] == true) {//taken
                     weight += items[item][ConfigurationProvider.WEIGHT_OF_ITEM];
                 }
             }

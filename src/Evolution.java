@@ -5,8 +5,8 @@ class Evolution {
     private int dimension;
     private int popSize;
     private int numOfGeners;
-    private double crossProb;
-    private double mutProb;
+    private float crossProb;
+    private float mutProb;
     private int tournamentSize;
     private GreedyPackingPlan greedy;
     private ParetoFrontsGenerator paretoGenerator;
@@ -21,7 +21,7 @@ class Evolution {
     private StringBuilder sBMiddlePopFront = new StringBuilder(middlePopFront);
     private StringBuilder sBLastPopFront = new StringBuilder(lastPopFront);
 
-    Evolution(Configuration config, int popSize, int numOfGeners, int tournamentSize, double crossProb, double mutProb) {
+    Evolution(Configuration config, int popSize, int numOfGeners, int tournamentSize, float crossProb, float mutProb) {
         this.popSize = popSize;
         this.numOfGeners = numOfGeners;
         this.tournamentSize = tournamentSize;
