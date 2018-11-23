@@ -41,7 +41,7 @@ class Individual {
     }
 
     void mutation(GreedyPackingPlan greedy, double mutProb) {
-        for(int i = 0; i < route.length - 1; i++) {// - 1
+        for(int i = 0; i < route.length - 1; i++) {
             if(Math.random() < mutProb) {
                 int swapIndex = new Random().nextInt(route.length - 1);
                 int temp = route[i];

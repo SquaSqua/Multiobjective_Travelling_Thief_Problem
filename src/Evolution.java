@@ -10,6 +10,7 @@ class Evolution {
     private int tournamentSize;
     private GreedyPackingPlan greedy;
     private ParetoFrontsGenerator paretoGenerator;
+    ArrayList<ArrayList<Individual>> paretoFronts;
 
     private ArrayList<Individual> population = new ArrayList<>();
 
@@ -42,32 +43,20 @@ class Evolution {
      */
     String evolve() {
 
-        ArrayList<ArrayList<Individual>> pareto = new ArrayList<>();
+        paretoFronts = new ArrayList<>();
         initialize();
         for (int generation = 1; generation < numOfGeners; generation++) {
             paretoGenerator.generateFrontsWithAssignments(population);
             population.addAll(generateOffspring(generation));
-            pareto = paretoGenerator.generateFrontsWithAssignments(population);
-            population = chooseNextGeneration(pareto);
+            paretoFronts = paretoGenerator.generateFrontsWithAssignments(population);
+            population = chooseNextGeneration(paretoFronts);
             if(generation == 1) {
 //                appendPopulationToStringBuilder(sBFirstPopFront);
                 appendParetoFrontToStringBuilder(sBFirstPopFront);
-                statistics(pareto);
-            }
-
-            //added for temporary use
-            if(generation == numOfGeners / 10) {
-//                appendPopulationToStringBuilder(sBFirstPopFront);
-                appendParetoFrontToStringBuilder(sBMiddlePopFront);
-                statistics(pareto);
-            }
-            if(generation == numOfGeners / 2) {
-//                appendPopulationToStringBuilder(sBFirstPopFront);
-                appendParetoFrontToStringBuilder(sBMiddlePopFront);
-                statistics(pareto);
+                statistics(paretoFronts);
             }
         }
-        statistics(pareto);
+        statistics(paretoFronts);
         appendParetoFrontToStringBuilder(sBLastPopFront);
         sBMiddlePopFront.append(sBLastPopFront);
         sBFirstPopFront.append(sBMiddlePopFront);
