@@ -85,8 +85,8 @@ class ConfigurationProvider {
     private double getNumber(String line) {
         Pattern p = Pattern.compile("\\d+(\\.\\d+)?");
         Matcher m = p.matcher(line);
-
-        return m.find() ? Double.parseDouble(m.group()) : 0;
+        m.find();
+        return Double.parseDouble(m.group());
     }
 
     //for time as y and wage as x
