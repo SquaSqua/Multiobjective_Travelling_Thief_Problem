@@ -58,30 +58,40 @@ class Evolution {
     }
 
     private void initialize() {
-        for (int i = 0; i < popSize; i++) {
-            population.add(new Individual(dimension));
-            population.get(population.size() - 1).setPackingPlanAndFitness();
+        HashMap<Integer, Individual> randomPopulation = new HashMap<>(popSize * 2);
+        while (randomPopulation.size() < popSize) {
+            Individual individual = new Individual(dimension);
+            int chances = 3;
+            while(randomPopulation.putIfAbsent(individual.hashCode(), individual) != null && chances > 0) {
+                individual.mutate(mutProb);
+                chances--;
+            }
         }
+        population.addAll(randomPopulation.values());
     }
 
     private ArrayList<Individual> generateOffspring(int generation) {
-        ArrayList<Individual> offspring = new ArrayList<>();
-        while (offspring.size() < popSize) {
+        HashMap<Integer, Individual> mixedPopulation = new HashMap<>(popSize * 3);
+        while (mixedPopulation.size() < 2 * popSize) {
             Individual[] children = matingPool(generation);
-            offspring.add(children[0]);
-            if (offspring.size() < popSize) {
-                offspring.add(children[1]);
+            int chances = 3;
+            for (Individual child : children) {
+                while (mixedPopulation.size() < 2 * popSize &&
+                        mixedPopulation.putIfAbsent(child.hashCode(), child) != null && chances > 0) {
+                    child.mutate(mutProb);
+                    chances--;
+                }
             }
         }
-        return offspring;
+        return new ArrayList<>(mixedPopulation.values());
     }
 
     //at this point population is already filled out with rank and crowding distance
     private Individual[] matingPool(int generation) {
         Individual parent1 = tournament();
         Individual[] children = parent1.cycleCrossing(tournament(), crossProb, generation);
-        children[0].mutation(mutProb);
-        children[1].mutation(mutProb);
+        children[0].mutate(mutProb);
+        children[1].mutate(mutProb);
         return children;
     }
 

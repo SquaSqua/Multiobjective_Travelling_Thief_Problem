@@ -1,5 +1,6 @@
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Objects;
 import java.util.Random;
 
 class Individual {
@@ -40,7 +41,7 @@ class Individual {
         this.birthday = 0;
     }
 
-    void mutation(double mutProb) {
+    void mutate(double mutProb) {
         for(int i = 0; i < route.length - 1; i++) {
             if(Math.random() < mutProb) {
                 int swapIndex = new Random().nextInt(route.length - 1);
@@ -150,6 +151,30 @@ class Individual {
         return (int) Math.signum((Math.signum(fitnessTime - o.fitnessTime) * -1)+ Math.signum((fitnessWage - o.fitnessWage)));
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if(o == this) return true;
+        if(o == null || o.getClass() != getClass()) return false;
+
+        Individual ind2 = (Individual) o;
+        for(int i = 0; i < route.length; i++)
+        {
+            if(route[i] != ind2.route[i]) {
+                return false;
+            }
+        }
+        for(int i = 0; i < packingPlan.length; i++) {
+            if(packingPlan[i] != ind2.packingPlan[i]) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(route, packingPlan);
+    }
 
     //getters
     short[] getRoute() {

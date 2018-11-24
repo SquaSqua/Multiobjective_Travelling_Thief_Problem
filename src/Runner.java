@@ -9,7 +9,7 @@ public class Runner {
         long start = System.currentTimeMillis();
         ConfigurationProvider configProvider = new ConfigurationProvider();
         configProvider.readFile(definitionFile);
-        Evolution population = new Evolution(100, 50, 6, 0.5f, 0.2f);
+        Evolution population = new Evolution(100, 250, 6, 0.5f, 0.2f);
 
         LocalDate date = LocalDate.now();
         LocalTime time = LocalTime.now();
