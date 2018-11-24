@@ -2,24 +2,14 @@ import java.util.ArrayList;
 
 class GreedyPackingPlan {
 
-    private static double coefficient;
-    private static double maxSpeed;
-    private static int capacity;
-    private static int dimension;
-    private static double[][] distances;
-    private static int[][] items;
-    private static Integer[][] groupedItems;
 
-    GreedyPackingPlan() {
-        maxSpeed = Configuration.getMaxSpeed();
-        capacity = Configuration.getCapacity();
-        dimension = Configuration.getDimension();
-        distances = Configuration.getDistances();
-        items = Configuration.getItems();
-
-        coefficient = (maxSpeed - Configuration.getMinSpeed()) / capacity;
-        createGroupedItemsArray();
-    }
+    private static double maxSpeed = Configuration.getMaxSpeed();
+    private static int capacity = Configuration.getCapacity();
+    private static int dimension = Configuration.getDimension();
+    private static double[][] distances = Configuration.getDistances();
+    private static int[][] items = Configuration.getItems();
+    private static Integer[][] groupedItems = createGroupedItemsArray();
+    private static double coefficient = (maxSpeed - Configuration.getMinSpeed()) / capacity;
 
     private static double countTime(short[] route, int startIndex, double currentSpeed) {
         int endIndex = route.length - 1;
@@ -116,7 +106,7 @@ class GreedyPackingPlan {
         individual.setFitnessTime(time);
     }
 
-    private static void createGroupedItemsArray() {
+    private static Integer[][] createGroupedItemsArray() {
         groupedItems = new Integer[dimension][];
         ArrayList<Integer>[] groupedItemsList = new ArrayList[dimension];
         for(int i = 0; i < dimension; i++) {
@@ -131,5 +121,6 @@ class GreedyPackingPlan {
                 groupedItems[i][j] = groupedItemsList[i].get(j);
             }
         }
+        return groupedItems;
     }
 }

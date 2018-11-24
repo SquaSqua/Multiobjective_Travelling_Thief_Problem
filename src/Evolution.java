@@ -1,3 +1,5 @@
+import org.jetbrains.annotations.NotNull;
+
 import java.util.*;
 
 class Evolution {
@@ -8,7 +10,6 @@ class Evolution {
     private float crossProb;
     private float mutProb;
     private int tournamentSize;
-    ArrayList<ArrayList<Individual>> paretoFronts;
 
     private ArrayList<Individual> population = new ArrayList<>();
 
@@ -34,8 +35,7 @@ class Evolution {
      * @return zwraca...
      */
     String evolve() {
-
-        paretoFronts = new ArrayList<>();
+        ArrayList<ArrayList<Individual>> paretoFronts = new ArrayList<>();
         initialize();
         for (int generation = 1; generation < numOfGeners; generation++) {
             ParetoFrontsGenerator.generateFrontsWithAssignments(population);
@@ -131,21 +131,21 @@ class Evolution {
         sBMeasures.append("\n");
     }
 
-    private void appendPopulationToStringBuilder(StringBuilder sB) {
-        int currentRank = 0;
-        sB.append("Czas podrozy").append(", ").append("Zarobek").append(", ").append("Stworzony w generacji\n");
-        for (Individual i : population) {
-            if (i.getRank() != currentRank) {
-                currentRank++;
-                sB.append("\n");
-            }
-            sB.append(i.getFitnessTime()).append(", ").append(i.getFitnessWage()).append(", ").append(i.getBirthday());
-//                    .append(Arrays.toString(i.getRoute())).append(", ").append(Arrays.toString(i.getPackingPlan()));
-            sB.append("\n");
-        }
-    }
+//    private void appendPopulationToStringBuilder(@NotNull StringBuilder sB) {
+//        int currentRank = 0;
+//        sB.append("Czas podrozy").append(", ").append("Zarobek").append(", ").append("Stworzony w generacji\n");
+//        for (Individual i : population) {
+//            if (i.getRank() != currentRank) {
+//                currentRank++;
+//                sB.append("\n");
+//            }
+//            sB.append(i.getFitnessTime()).append(", ").append(i.getFitnessWage()).append(", ").append(i.getBirthday());
+////                    .append(Arrays.toString(i.getRoute())).append(", ").append(Arrays.toString(i.getPackingPlan()));
+//            sB.append("\n");
+//        }
+//    }
 
-    private void appendParetoFrontToStringBuilder(StringBuilder sB) {
+    private void appendParetoFrontToStringBuilder(@NotNull StringBuilder sB) {
         sB.append("Czas podrozy").append(", ").append("Zarobek").append(", ").append("Stworzony w generacji\n");
         for (Individual i : population) {
             if (i.getRank() == 0) {
