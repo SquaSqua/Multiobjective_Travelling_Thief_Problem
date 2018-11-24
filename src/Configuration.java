@@ -1,69 +1,71 @@
 public class Configuration {
 
-    private int dimension;
-    private int capacity;
-    private double minSpeed;
-    private double maxSpeed;
-    private double rentingRatio;
+    private static int dimension;
+    private static int capacity;
+    private static double minSpeed;
+    private static double maxSpeed;
+    private static double rentingRatio;
 
-    private double[][] distances;
-    private int[][] items;
-    private Point ideal, nadir;
+    private static double[][] distances;
+    private static int[][] items;
+    private static Point ideal, nadir;
 
 //    getters
-    public int getCapacity() {
+    public static int getCapacity() {
         return capacity;
     }
-    public int getDimension() {
+    public static int getDimension() {
         return dimension;
     }
-    double getMinSpeed() {
-        return minSpeed;
-    }
-    double getMaxSpeed() {
-        return maxSpeed;
-    }
-    double[][] getDistances() {
-        return distances;
-    }
-    public int[][] getItems() {
+    public static int[][] getItems() {
         return items;
     }
-    Point getIdeal() {
+
+    static double getMinSpeed() {
+        return minSpeed;
+    }
+    static double getMaxSpeed() {
+        return maxSpeed;
+    }
+
+    static double[][] getDistances() {
+        return distances;
+    }
+
+    static Point getIdeal() {
         return ideal;
     }
-    Point getNadir() {
+    static Point getNadir() {
         return nadir;
     }
 
 
     //setters
-    public void setDimension(int dimension) {
-        this.dimension = dimension;
+    public static void setDimension(int dimension) { Configuration.dimension = dimension; }
+    public static void setCapacity(int capacity) {
+        Configuration.capacity = capacity;
     }
-    public void setCapacity(int capacity) {
-        this.capacity = capacity;
+    public static void setItems(int[][] items) {
+        Configuration.items = items;
     }
-    void setMinSpeed(double minSpeed) {
-        this.minSpeed = minSpeed;
+
+    static void setMinSpeed(double minSpeed) {
+        Configuration.minSpeed = minSpeed;
     }
-    void setMaxSpeed(double maxSpeed) {
-        this.maxSpeed = maxSpeed;
+    static void setMaxSpeed(double maxSpeed) {
+        Configuration.maxSpeed = maxSpeed;
     }
-    void setRentingRatio(double rentingRatio) {
-        this.rentingRatio = rentingRatio;
+    static void setRentingRatio(double rentingRatio) {
+        Configuration.rentingRatio = rentingRatio;
     }
-    void setDistances(double[][] distances) {
-        this.distances = distances;
+    static void setDistances(double[][] distances) {
+        Configuration.distances = distances;
     }
-    public void setItems(int[][] items) {
-        this.items = items;
+    static void setIdeal(Point ideal) {
+        Configuration.ideal = ideal;
     }
-    void setIdeal(Point ideal) {
-        this.ideal = ideal;
-    }
-    void setNadir(Point nadir) {
-        this.nadir = nadir;
+    static void setNadir(Point nadir) {
+        Configuration.nadir = nadir;
     }
 
 }

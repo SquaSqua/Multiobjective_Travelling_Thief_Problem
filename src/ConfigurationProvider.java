@@ -17,8 +17,7 @@ class ConfigurationProvider {
     static final char WEIGHT_OF_ITEM = 2;
     static final char CITY_OF_ITEM = 3;
 
-    Configuration readFile(String definitionFile) {
-        Configuration config = new Configuration();
+    void readFile(String definitionFile) {
         int dimension;
         int numOfItems;
         double[][] cities;
@@ -30,12 +29,12 @@ class ConfigurationProvider {
             reader.readLine();//PROBLEM NAME
             reader.readLine();//KNAPSACK DATA TYPE
             dimension = (int)getNumber(reader.readLine());
-            config.setDimension(dimension);
+            Configuration.setDimension(dimension);
             numOfItems = (int)getNumber(reader.readLine());
-            config.setCapacity((int)getNumber(reader.readLine()));
-            config.setMinSpeed(getNumber(reader.readLine()));
-            config.setMaxSpeed(getNumber(reader.readLine()));
-            config.setRentingRatio(getNumber(reader.readLine()));
+            Configuration.setCapacity((int)getNumber(reader.readLine()));
+            Configuration.setMinSpeed(getNumber(reader.readLine()));
+            Configuration.setMaxSpeed(getNumber(reader.readLine()));
+            Configuration.setRentingRatio(getNumber(reader.readLine()));
             reader.readLine();//EDGE_WEIGHT_TYPE
             reader.readLine();//NODE_COORD_SECTION...
             cities = new double[dimension][NUMBER_OF_INFO_PER_CITY];
@@ -46,7 +45,7 @@ class ConfigurationProvider {
                 }
             }
             distances = createDistancesArray(dimension, cities);
-            config.setDistances(distances);
+            Configuration.setDistances(distances);
             reader.readLine();
             items = new int[numOfItems][NUMBER_OF_INFO_PER_ITEM];
             for (int i = 0; i < numOfItems; i++) {//filling out items array
@@ -55,15 +54,14 @@ class ConfigurationProvider {
                     items[i][j] = Integer.parseInt(st.nextToken());
                 }
             }
-            config.setItems(items);
-            config.setIdeal(countPoint(true, distances, dimension, items));
-            config.setNadir(countPoint(false, distances, dimension, items));
+            Configuration.setItems(items);
+            Configuration.setIdeal(countPoint(true, distances, dimension, items));
+            Configuration.setNadir(countPoint(false, distances, dimension, items));
         } catch (FileNotFoundException fnfe) {
             System.out.println("A file doesn't exist or is in use now!");
         } catch (Exception e) {
             System.out.println("An error has occurred while reading data: " + e);
         }
-        return config;
     }
 
     private double[][] createDistancesArray(int dimension, double[][] cities) {

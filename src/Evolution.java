@@ -8,8 +8,6 @@ class Evolution {
     private float crossProb;
     private float mutProb;
     private int tournamentSize;
-    private GreedyPackingPlan greedy;
-    private ParetoFrontsGenerator paretoGenerator;
     ArrayList<ArrayList<Individual>> paretoFronts;
 
     private ArrayList<Individual> population = new ArrayList<>();
@@ -21,20 +19,14 @@ class Evolution {
     private StringBuilder sBMiddlePopFront = new StringBuilder(middlePopFront);
     private StringBuilder sBLastPopFront = new StringBuilder(lastPopFront);
 
-    Evolution(Configuration config, int popSize, int numOfGeners, int tournamentSize, float crossProb, float mutProb) {
+    Evolution(int popSize, int numOfGeners, int tournamentSize, float crossProb, float mutProb) {
         this.popSize = popSize;
         this.numOfGeners = numOfGeners;
         this.tournamentSize = tournamentSize;
         this.crossProb = crossProb;
         this.mutProb = mutProb;
 
-        readParameters(config);
-    }
-
-    private void readParameters(Configuration config) {
-        greedy = new GreedyPackingPlan(config);
-        dimension = config.getDimension();
-        paretoGenerator = new ParetoFrontsGenerator(config.getIdeal(), config.getNadir());
+        dimension = Configuration.getDimension();
     }
 
     /**
@@ -46,9 +38,9 @@ class Evolution {
         paretoFronts = new ArrayList<>();
         initialize();
         for (int generation = 1; generation < numOfGeners; generation++) {
-            paretoGenerator.generateFrontsWithAssignments(population);
+            ParetoFrontsGenerator.generateFrontsWithAssignments(population);
             population.addAll(generateOffspring(generation));
-            paretoFronts = paretoGenerator.generateFrontsWithAssignments(population);
+            paretoFronts = ParetoFrontsGenerator.generateFrontsWithAssignments(population);
             population = chooseNextGeneration(paretoFronts);
             if(generation == 1) {
 //                appendPopulationToStringBuilder(sBFirstPopFront);
@@ -68,7 +60,7 @@ class Evolution {
     private void initialize() {
         for (int i = 0; i < popSize; i++) {
             population.add(new Individual(dimension));
-            population.get(population.size() - 1).setPackingPlanAndFitness(greedy);
+            population.get(population.size() - 1).setPackingPlanAndFitness();
         }
     }
 
@@ -88,8 +80,8 @@ class Evolution {
     private Individual[] matingPool(int generation) {
         Individual parent1 = tournament();
         Individual[] children = parent1.cycleCrossing(tournament(), crossProb, generation);
-        children[0].mutation(greedy, mutProb);
-        children[1].mutation(greedy, mutProb);
+        children[0].mutation(mutProb);
+        children[1].mutation(mutProb);
         return children;
     }
 
@@ -133,9 +125,9 @@ class Evolution {
     }
 
     private void statistics(ArrayList<ArrayList<Individual>> pareto) {
-        sBMeasures.append(paretoGenerator.ED_measure(pareto)).append(", ")
-                .append(paretoGenerator.PFS_measure(pareto)).append(", ")
-                .append(paretoGenerator.HV_measure(pareto));
+        sBMeasures.append(ParetoFrontsGenerator.ED_measure(pareto)).append(", ")
+                .append(ParetoFrontsGenerator.PFS_measure(pareto)).append(", ")
+                .append(ParetoFrontsGenerator.HV_measure(pareto));
         sBMeasures.append("\n");
     }
 

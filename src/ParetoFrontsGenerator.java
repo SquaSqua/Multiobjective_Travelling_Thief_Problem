@@ -2,15 +2,12 @@ import java.util.ArrayList;
 
 class ParetoFrontsGenerator {
 
-    private Point ideal, nadir;
+    private static Point ideal = Configuration.getIdeal();
+    private static Point nadir = Configuration.getNadir();
 
-    ParetoFrontsGenerator(Point ideal, Point nadir) {
-        this.ideal = ideal;
-        this.nadir = nadir;
-    }
 
     //each calling overrides last set paretoFronts
-    private ArrayList<ArrayList<Individual>> generateFronts(ArrayList<Individual> population) {
+    private static ArrayList<ArrayList<Individual>> generateFronts(ArrayList<Individual> population) {
         ArrayList<ArrayList<Individual>> paretoFronts = new ArrayList<>();
         paretoFronts.add(new ArrayList<>());
         for(int i = 0; i < population.size(); i++) {
@@ -85,41 +82,15 @@ class ParetoFrontsGenerator {
         return paretoFronts;
     }
 
-    private ArrayList<ArrayList<Individual>> fixFronts(ArrayList<ArrayList<Individual>> paretoFronts, int j) {
+    private static ArrayList<ArrayList<Individual>> fixFronts(ArrayList<ArrayList<Individual>> paretoFronts, int j) {
         ArrayList<Individual> tempPopulation = new ArrayList<>();
         for(int i = j + 1; i < paretoFronts.size(); i++) {
             tempPopulation.addAll(paretoFronts.get(i));
         }
-        ParetoFrontsGenerator generator = new ParetoFrontsGenerator(ideal, nadir);
-        return generator.generateFronts(tempPopulation);
+        return generateFronts(tempPopulation);
     }
 
-//    private ArrayList<ArrayList<Individual>> generateFronts2(ArrayList<Individual> population) {
-//        ArrayList<ArrayList<Individual>> paretoFronts = new ArrayList<>();
-//        int currentRank = 0;
-//        int currentIndex = 0;
-//        while(!population.isEmpty()) {
-//            Individual currentIndividual = population.get(currentIndex);
-//            boolean isDominated = false;
-//            boolean hasEqual = false;
-//            for(int i = 0; i < population.size(); i++) {
-//                int amIbetter = currentIndividual.compareTo(population.get(i));
-//                if(amIbetter == -1) {
-//                    isDominated = true;
-//                    currentIndex++;
-//                    break;
-//                }
-//                else if(amIbetter == 0 && !hasEqual) {
-//                    hasEqual = true;
-//                }
-//            }
-//            if(!isDominated) {
-//                paretoFronts.
-//            }
-//        }
-//    }
-
-    ArrayList<ArrayList<Individual>> generateFrontsWithAssignments(ArrayList<Individual> population) {
+    static ArrayList<ArrayList<Individual>> generateFrontsWithAssignments(ArrayList<Individual> population) {
         ArrayList<ArrayList<Individual>> paretoFronts;
         paretoFronts = generateFronts(population);
         assignRank(paretoFronts);
@@ -128,7 +99,7 @@ class ParetoFrontsGenerator {
         return paretoFronts;
     }
 
-    private void assignRank(ArrayList<ArrayList<Individual>> paretoFronts) {
+    private static void assignRank(ArrayList<ArrayList<Individual>> paretoFronts) {
         for(int i = 0; i < paretoFronts.size(); i++) {
             for(int j = 0; j < paretoFronts.get(i).size(); j++) {
                 paretoFronts.get(i).get(j).setRank(i);
@@ -136,13 +107,13 @@ class ParetoFrontsGenerator {
         }
     }
 
-    private void objectiveSorting(ArrayList<ArrayList<Individual>> paretoFronts) {
+    private static void objectiveSorting(ArrayList<ArrayList<Individual>> paretoFronts) {
         for (ArrayList<Individual> paretoFront : paretoFronts) {
             paretoFront.sort(new ObjectiveFrontComparator());
         }
     }
 
-    private void crowdingDistanceSetter(ArrayList<ArrayList<Individual>> paretoFronts) {
+    private static void crowdingDistanceSetter(ArrayList<ArrayList<Individual>> paretoFronts) {
         objectiveSorting(paretoFronts);
         for (ArrayList<Individual> paretoFront : paretoFronts) {
             paretoFront.get(0).setCrowdingDistance(Double.POSITIVE_INFINITY);
@@ -159,7 +130,7 @@ class ParetoFrontsGenerator {
         }
     }
 
-    String ED_measure(ArrayList<ArrayList<Individual>> paretoFronts) {
+    static String ED_measure(ArrayList<ArrayList<Individual>> paretoFronts) {
         double sumED = 0;
         ArrayList<Individual> paretoFront = paretoFronts.get(0);
         paretoFront.sort(new ObjectiveFrontComparator());
@@ -172,11 +143,11 @@ class ParetoFrontsGenerator {
         return (sumED / paretoFront.size()) + "";
     }
 
-    String PFS_measure(ArrayList<ArrayList<Individual>> paretoFronts) {
+    static String PFS_measure(ArrayList<ArrayList<Individual>> paretoFronts) {
         return paretoFronts.get(0).size() + "";
     }
 
-    double HV_measure(ArrayList<ArrayList<Individual>> paretoFronts) {
+    static double HV_measure(ArrayList<ArrayList<Individual>> paretoFronts) {
         ArrayList<Individual> paretoFront = paretoFronts.get(0);
         paretoFront.sort(new ObjectiveFrontComparator());
         long hyperVolume = 0L;

@@ -40,7 +40,7 @@ class Individual {
         this.birthday = 0;
     }
 
-    void mutation(GreedyPackingPlan greedy, double mutProb) {
+    void mutation(double mutProb) {
         for(int i = 0; i < route.length - 1; i++) {
             if(Math.random() < mutProb) {
                 int swapIndex = new Random().nextInt(route.length - 1);
@@ -51,7 +51,7 @@ class Individual {
         }
         route[route.length - 1] = route[0];
 
-        setPackingPlanAndFitness(greedy);
+        setPackingPlanAndFitness();
     }
 
     Individual[] cycleCrossing(Individual parent2, double crossProb, int generation) {
@@ -184,9 +184,9 @@ class Individual {
         this.packingPlan = packingPlan;
     }
 
-    void setPackingPlanAndFitness(GreedyPackingPlan greedy) {
-        greedy.settlePackingPlan(this);
-        greedy.setFitnessForIndividual(this);
+    void setPackingPlanAndFitness() {
+        GreedyPackingPlan.settlePackingPlan(this);
+        GreedyPackingPlan.setFitnessForIndividual(this);
     }
 
     void setFitnessTime(double fitnessTime) {
