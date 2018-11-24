@@ -6,12 +6,11 @@ import java.time.LocalTime;
 public class Runner {
     public static void main(String[] args) {
 
+        String definitionFile = "src/definitionFiles/hard_3.ttp";
         long start = System.currentTimeMillis();
         ConfigurationProvider configProvider = new ConfigurationProvider();
-        configProvider.readFile("src/definitionFiles/hard_3.ttp");
-        GreedyPackingPlan greedyPackingPlan = new GreedyPackingPlan();
-        ParetoFrontsGenerator paretoFrontsGenerator = new ParetoFrontsGenerator();
-        Evolution population = new Evolution(100, 50, 6, 0.5f, 0.2f);
+        configProvider.readFile(definitionFile);
+        Evolution population = new Evolution(100, 250, 6, 0.5f, 0.2f);
 
         LocalDate date = LocalDate.now();
         LocalTime time = LocalTime.now();
