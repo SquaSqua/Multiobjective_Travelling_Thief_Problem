@@ -49,6 +49,8 @@ class Evolution {
             }
         }
         statistics(paretoFronts);
+        sBMeasures.append(Configuration.getIdeal().x + ". " + Configuration.getIdeal().y + ", "
+                + Configuration.getNadir().x + ". " + Configuration.getNadir().y +"\n");
         appendParetoFrontToStringBuilder(sBLastPopFront);
         sBMiddlePopFront.append(sBLastPopFront);
         sBFirstPopFront.append(sBMiddlePopFront);

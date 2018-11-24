@@ -91,41 +91,41 @@ class ConfigurationProvider {
 
     //for time as y and wage as x
     private Point countPoint(boolean isIdeal, double[][] distances, int dimension, int[][] items) {
-        double time;
-        int wage;
+        double distance;
+        int profit;
         Point point;
         if (isIdeal) {
-            time = Double.MAX_VALUE;
-            wage = Integer.MIN_VALUE;
+            distance = Double.MAX_VALUE;
+            profit = Integer.MIN_VALUE;
             for (int i = 0; i < distances.length; i++) {
                 for (int j = i + 1; j < distances[i].length; j++) {
-                    if (time > distances[i][j] && distances[i][j] != 0) {
-                        time = distances[i][j];
+                    if (distance > distances[i][j] && distances[i][j] != 0) {
+                        distance = distances[i][j];
                     }
                 }
             }
             for (int[] item : items) {
-                if (wage < item[PROFIT_FROM_ITEM]) {
-                    wage = item[PROFIT_FROM_ITEM];
+                if (profit < item[PROFIT_FROM_ITEM]) {
+                    profit = item[PROFIT_FROM_ITEM];
                 }
             }
-            point = new Point(wage * items.length, time * dimension);
+            point = new Point(profit * items.length, distance * dimension);
         } else {
-            time = Double.MIN_VALUE;
-            wage = Integer.MAX_VALUE;
+            distance = Double.MIN_VALUE;
+            profit = Integer.MAX_VALUE;
             for (int i = 0; i < distances.length; i++) {
                 for (int j = i + 1; j < distances[i].length; j++) {
-                    if (time > distances[i][j] && distances[i][j] != 0) {
-                        time = distances[i][j];
+                    if (distance < distances[i][j] && distances[i][j] != 0) {
+                        distance = distances[i][j];
                     }
                 }
             }
             for (int[] item : items) {
-                if (wage > item[PROFIT_FROM_ITEM]) {
-                    wage = item[PROFIT_FROM_ITEM];
+                if (profit > item[PROFIT_FROM_ITEM]) {
+                    profit = item[PROFIT_FROM_ITEM];
                 }
             }
-            point = new Point(wage * items.length, time * dimension);
+            point = new Point(profit * items.length, distance * dimension);
         }
         return point;
     }
