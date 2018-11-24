@@ -3,14 +3,9 @@
   <component name="ChangeListManager">
     <list default="true" id="05abc257-f592-4d02-a035-5c8eeb1353b3" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/Multiobjective_Travelling_Thief_Problem/ConfigurationProvider.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/Multiobjective_Travelling_Thief_Problem/ConfigurationProvider.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.~lock.results_NOVEMBER_24__19_22_29.csv#" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/out/production/Multiobjective_Travelling_Thief_Problem/Evolution.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/Multiobjective_Travelling_Thief_Problem/Evolution.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/Multiobjective_Travelling_Thief_Problem/GreedyPackingPlan.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/Multiobjective_Travelling_Thief_Problem/GreedyPackingPlan.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/Multiobjective_Travelling_Thief_Problem/Individual.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/Multiobjective_Travelling_Thief_Problem/Individual.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/Multiobjective_Travelling_Thief_Problem/Runner.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/Multiobjective_Travelling_Thief_Problem/Runner.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Evolution.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Evolution.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Individual.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Individual.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Runner.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Runner.java" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/out/" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -52,12 +47,12 @@
       </usages-collector>
       <usages-collector id="statistics.file.types.edit">
         <counts>
-          <entry key="JAVA" value="17999" />
+          <entry key="JAVA" value="18019" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.extensions.edit">
         <counts>
-          <entry key="java" value="17999" />
+          <entry key="java" value="18019" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.types.open">
@@ -80,11 +75,11 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file pinned="false" current-in-tab="true">
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/Evolution.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="252">
-              <caret line="69" column="53" lean-forward="true" selection-start-line="69" selection-start-column="53" selection-end-line="69" selection-end-column="53" />
+            <state relative-caret-position="72">
+              <caret line="71" column="41" selection-start-line="71" selection-start-column="41" selection-end-line="71" selection-end-column="41" />
               <folding>
                 <element signature="e#5181#5260#0" />
               </folding>
@@ -95,21 +90,11 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/Individual.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="731">
-              <caret line="169" column="9" lean-forward="true" selection-start-line="169" selection-start-column="9" selection-end-line="169" selection-end-column="9" />
+            <state relative-caret-position="2603">
+              <caret line="171" column="5" lean-forward="true" selection-start-line="171" selection-start-column="5" selection-end-line="171" selection-end-column="5" />
               <folding>
-                <element signature="method#Individual#0;class#Individual#0" />
-                <element signature="method#Individual#1;class#Individual#0" />
-                <element signature="method#Individual#2;class#Individual#0" />
-                <element signature="method#mutate#0;class#Individual#0" />
-                <element signature="method#cycleCrossing#0;class#Individual#0" />
-                <element signature="method#assignGens#0;class#Individual#0" />
-                <element signature="method#addLastCity#0;class#Individual#0" />
-                <element signature="method#findFirstEmpty#0;class#Individual#0" />
-                <element signature="method#findIndexOfaValue#0;class#Individual#0" />
-                <element signature="method#compareTo#0;class#Individual#0" />
-                <element signature="e#5681#5682#0" expanded="true" />
-                <element signature="e#5736#5737#0" expanded="true" />
+                <element signature="e#5506#5507#0" expanded="true" />
+                <element signature="e#5561#5562#0" expanded="true" />
                 <element signature="e#5776#5777#0" expanded="true" />
                 <element signature="e#5804#5805#0" expanded="true" />
                 <element signature="e#5838#5839#0" expanded="true" />
@@ -138,11 +123,11 @@
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="false">
+      <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/ParetoFrontsGenerator.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="36">
-              <caret line="2" column="6" selection-start-line="2" selection-start-column="6" selection-end-line="2" selection-end-column="6" />
+            <state relative-caret-position="-251">
+              <caret line="7" lean-forward="true" selection-start-line="7" selection-end-line="7" />
               <folding>
                 <element signature="method#generateFronts#0;class#ParetoFrontsGenerator#0" />
                 <element signature="method#fixFronts#0;class#ParetoFrontsGenerator#0" />
@@ -159,8 +144,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/Runner.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="198">
-              <caret line="11" column="51" selection-start-line="11" selection-start-column="51" selection-end-line="11" selection-end-column="51" />
+            <state relative-caret-position="108">
+              <caret line="6" column="44" lean-forward="true" selection-start-line="6" selection-start-column="44" selection-end-line="6" selection-end-column="44" />
               <folding>
                 <element signature="imports" expanded="true" />
               </folding>
@@ -220,8 +205,8 @@
         <option value="$PROJECT_DIR$/src/GreedyPackingPlan.java" />
         <option value="$PROJECT_DIR$/src/ConfigurationProvider.java" />
         <option value="$PROJECT_DIR$/src/Individual.java" />
-        <option value="$PROJECT_DIR$/src/Evolution.java" />
         <option value="$PROJECT_DIR$/src/Runner.java" />
+        <option value="$PROJECT_DIR$/src/Evolution.java" />
       </list>
     </option>
   </component>
@@ -265,7 +250,7 @@
     <property name="Repository.Attach.JavaDocs" value="false" />
     <property name="Repository.Attach.Sources" value="false" />
     <property name="SearchEverywhereHistoryKey" value="javadoc&#9;FILE&#9;jar://D:/Program Files/Java/src.zip!/com/sun/javadoc&#10;getCapacity&#9;PSI&#9;JAVA://Configuration#getCapacity" />
-    <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1543084320139" />
+    <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1543086593280" />
     <property name="settings.editor.selected.configurable" value="preferences.lookFeel" />
   </component>
   <component name="RecentsManager">
@@ -316,7 +301,7 @@
     <servers />
   </component>
   <component name="ToolWindowManager">
-    <frame x="-7" y="-7" width="1550" height="838" extended-state="7" />
+    <frame x="-7" y="-7" width="1550" height="838" extended-state="6" />
     <editor active="true" />
     <layout>
       <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.21140939" />
@@ -328,7 +313,7 @@
       <window_info id="Favorites" order="6" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" weight="0.32907802" />
-      <window_info anchor="bottom" id="Run" order="2" weight="0.3432624" />
+      <window_info active="true" anchor="bottom" id="Run" order="2" visible="true" weight="0.3432624" />
       <window_info anchor="bottom" id="Debug" order="3" weight="0.33617023" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
@@ -455,9 +440,7 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/results_NOVEMBER_24__10_22_50.csv">
-      <provider selected="true" editor-type-id="csv-text-editor" />
-    </entry>
+    <entry file="file://$PROJECT_DIR$/results_NOVEMBER_24__10_22_50.csv" />
     <entry file="file://$PROJECT_DIR$/src/GreedyPackingPlan.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="402">
@@ -516,49 +499,23 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/Runner.java">
+    <entry file="file://$PROJECT_DIR$/src/Evolution.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="198">
-          <caret line="11" column="51" selection-start-line="11" selection-start-column="51" selection-end-line="11" selection-end-column="51" />
+        <state relative-caret-position="72">
+          <caret line="71" column="41" selection-start-line="71" selection-start-column="41" selection-end-line="71" selection-end-column="41" />
           <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/ParetoFrontsGenerator.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="36">
-          <caret line="2" column="6" selection-start-line="2" selection-start-column="6" selection-end-line="2" selection-end-column="6" />
-          <folding>
-            <element signature="method#generateFronts#0;class#ParetoFrontsGenerator#0" />
-            <element signature="method#fixFronts#0;class#ParetoFrontsGenerator#0" />
-            <element signature="method#generateFrontsWithAssignments#0;class#ParetoFrontsGenerator#0" />
-            <element signature="method#assignRank#0;class#ParetoFrontsGenerator#0" />
-            <element signature="method#objectiveSorting#0;class#ParetoFrontsGenerator#0" />
-            <element signature="method#crowdingDistanceSetter#0;class#ParetoFrontsGenerator#0" />
-            <element signature="method#HV_measure#0;class#ParetoFrontsGenerator#0" />
+            <element signature="e#5181#5260#0" />
           </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/Individual.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="731">
-          <caret line="169" column="9" lean-forward="true" selection-start-line="169" selection-start-column="9" selection-end-line="169" selection-end-column="9" />
+        <state relative-caret-position="2603">
+          <caret line="171" column="5" lean-forward="true" selection-start-line="171" selection-start-column="5" selection-end-line="171" selection-end-column="5" />
           <folding>
-            <element signature="method#Individual#0;class#Individual#0" />
-            <element signature="method#Individual#1;class#Individual#0" />
-            <element signature="method#Individual#2;class#Individual#0" />
-            <element signature="method#mutate#0;class#Individual#0" />
-            <element signature="method#cycleCrossing#0;class#Individual#0" />
-            <element signature="method#assignGens#0;class#Individual#0" />
-            <element signature="method#addLastCity#0;class#Individual#0" />
-            <element signature="method#findFirstEmpty#0;class#Individual#0" />
-            <element signature="method#findIndexOfaValue#0;class#Individual#0" />
-            <element signature="method#compareTo#0;class#Individual#0" />
-            <element signature="e#5681#5682#0" expanded="true" />
-            <element signature="e#5736#5737#0" expanded="true" />
+            <element signature="e#5506#5507#0" expanded="true" />
+            <element signature="e#5561#5562#0" expanded="true" />
             <element signature="e#5776#5777#0" expanded="true" />
             <element signature="e#5804#5805#0" expanded="true" />
             <element signature="e#5838#5839#0" expanded="true" />
@@ -586,12 +543,28 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/Evolution.java">
+    <entry file="file://$PROJECT_DIR$/src/Runner.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="252">
-          <caret line="69" column="53" lean-forward="true" selection-start-line="69" selection-start-column="53" selection-end-line="69" selection-end-column="53" />
+        <state relative-caret-position="108">
+          <caret line="6" column="44" lean-forward="true" selection-start-line="6" selection-start-column="44" selection-end-line="6" selection-end-column="44" />
           <folding>
-            <element signature="e#5181#5260#0" />
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/ParetoFrontsGenerator.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-251">
+          <caret line="7" lean-forward="true" selection-start-line="7" selection-end-line="7" />
+          <folding>
+            <element signature="method#generateFronts#0;class#ParetoFrontsGenerator#0" />
+            <element signature="method#fixFronts#0;class#ParetoFrontsGenerator#0" />
+            <element signature="method#generateFrontsWithAssignments#0;class#ParetoFrontsGenerator#0" />
+            <element signature="method#assignRank#0;class#ParetoFrontsGenerator#0" />
+            <element signature="method#objectiveSorting#0;class#ParetoFrontsGenerator#0" />
+            <element signature="method#crowdingDistanceSetter#0;class#ParetoFrontsGenerator#0" />
+            <element signature="method#HV_measure#0;class#ParetoFrontsGenerator#0" />
           </folding>
         </state>
       </provider>

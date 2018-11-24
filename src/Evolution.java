@@ -68,6 +68,9 @@ class Evolution {
             }
         }
         population.addAll(randomPopulation.values());
+        for(Individual i : population) {
+            i.setPackingPlanAndFitness();
+        }
     }
 
     private ArrayList<Individual> generateOffspring(int generation) {
