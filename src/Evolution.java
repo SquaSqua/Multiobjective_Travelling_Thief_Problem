@@ -50,8 +50,11 @@ class Evolution {
                 statistics(paretoFronts);
             }
         }
+        paretoFronts = ParetoFrontsGenerator.generateFrontsWithAssignments(population);
         statistics(paretoFronts);
-        sBMeasures.append(Configuration.getIdeal().x).append(". ").append(Configuration.getIdeal().y).append(", ").append(Configuration.getNadir().x).append(". ").append(Configuration.getNadir().y).append("\n");
+        sBMeasures.append(Configuration.getIdeal().x).append(". ").append(Configuration.getIdeal().y).append(", ")
+                .append(Configuration.getNadir().x).append(". ").append(Configuration.getNadir().y).append("\n");
+//        appendPopulationToStringBuilder(sBLastPopFront);
         appendParetoFrontToStringBuilder(sBLastPopFront);
         sBMiddlePopFront.append(sBLastPopFront);
         sBFirstPopFront.append(sBMiddlePopFront);
@@ -127,13 +130,14 @@ class Evolution {
     }
 
     private ArrayList<Individual> chooseNextGeneration(ArrayList<ArrayList<Individual>> pareto) {
+        ArrayList<ArrayList<Individual>> temporaryPareto = new ArrayList<>(pareto);
         ArrayList<Individual> nextGeneration = new ArrayList<>();
         while (nextGeneration.size() < popSize) {
-            if (pareto.get(0).size() <= popSize - nextGeneration.size()) {
-                nextGeneration.addAll(pareto.get(0));
-                pareto.remove(0);
+            if (temporaryPareto.get(0).size() <= popSize - nextGeneration.size()) {
+                nextGeneration.addAll(temporaryPareto.get(0));
+                temporaryPareto.remove(0);
             } else {
-                ArrayList<Individual> firstFront = pareto.get(0);
+                ArrayList<Individual> firstFront = temporaryPareto.get(0);
                 firstFront.sort(new CrowdingDistanceComparator());
                 for (Individual ind : firstFront) {
                     if (nextGeneration.size() < popSize) {
