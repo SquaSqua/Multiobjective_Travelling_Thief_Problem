@@ -114,7 +114,7 @@ class ConfigurationProvider {
             wage = Integer.MAX_VALUE;
             for (int i = 0; i < distances.length; i++) {
                 for (int j = i + 1; j < distances[i].length; j++) {
-                    if (time > distances[i][j] && distances[i][j] != 0) {
+                    if (time < distances[i][j] && distances[i][j] != 0) {
                         time = distances[i][j];
                     }
                 }

@@ -135,7 +135,7 @@ class ParetoFrontsGenerator {
         ArrayList<Individual> paretoFront = paretoFronts.get(0);
         paretoFront.sort(new ObjectiveFrontComparator());
         for (Individual ind : paretoFront) {
-            sumED += Math.sqrt((long) (int) ((ind.getFitnessTime() - ideal.x)
+            sumED += Math.sqrt((long)((ind.getFitnessTime() - ideal.x)
                     * (ind.getFitnessTime() - ideal.x) + (ind.getFitnessWage() - ideal.y)
                     * (ind.getFitnessWage() - ideal.y)));
         }
