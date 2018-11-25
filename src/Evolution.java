@@ -4,6 +4,8 @@ import java.util.*;
 
 class Evolution {
 
+    private static int clonesCounter = 0;
+
     private int dimension;
     private int popSize;
     private int numOfGeners;
@@ -49,13 +51,13 @@ class Evolution {
             }
         }
         statistics(paretoFronts);
-        sBMeasures.append(Configuration.getIdeal().x + ". " + Configuration.getIdeal().y + ", "
-                + Configuration.getNadir().x + ". " + Configuration.getNadir().y +"\n");
+        sBMeasures.append(Configuration.getIdeal().x).append(". ").append(Configuration.getIdeal().y).append(", ").append(Configuration.getNadir().x).append(". ").append(Configuration.getNadir().y).append("\n");
         appendParetoFrontToStringBuilder(sBLastPopFront);
         sBMiddlePopFront.append(sBLastPopFront);
         sBFirstPopFront.append(sBMiddlePopFront);
         sBMeasures.append(sBFirstPopFront);
         measures = sBMeasures.toString();
+        System.out.println(clonesCounter);
         return measures;
     }
 
@@ -67,6 +69,7 @@ class Evolution {
             while(randomPopulation.contains(individual) && chances > 0) {
                 individual.mutate(mutProb);
                 chances--;
+                clonesCounter++;
             }
             randomPopulation.add(individual);
         }
@@ -86,6 +89,7 @@ class Evolution {
                         mixedPopulation.contains(child) && chances > 0) {
                     child.mutate(mutProb);
                     chances--;
+                    clonesCounter++;
                 }
                 mixedPopulation.add(child);
             }
