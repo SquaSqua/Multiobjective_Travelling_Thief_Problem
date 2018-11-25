@@ -34,7 +34,6 @@ class Evolution {
      */
     String evolve() {
         ArrayList<ArrayList<Individual>> paretoFronts;
-        paretoFronts = new ArrayList<>();//na chuj mie to tutaj? usunac
         initialize();
         for (int generation = 1; generation < numOfGeners; generation++) {
             ParetoFrontsGenerator.generateFrontsWithAssignments(population);
