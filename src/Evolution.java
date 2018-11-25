@@ -60,35 +60,37 @@ class Evolution {
     }
 
     private void initialize() {
-        HashMap<Integer, Individual> randomPopulation = new HashMap<>(popSize * 2);
+        HashSet<Individual> randomPopulation = new HashSet<>(popSize * 2);
         while (randomPopulation.size() < popSize) {
             Individual individual = new Individual(dimension);
             int chances = 3;
-            while(randomPopulation.putIfAbsent(individual.hashCode(), individual) != null && chances > 0) {
+            while(randomPopulation.contains(individual) && chances > 0) {
                 individual.mutate(mutProb);
                 chances--;
             }
+            randomPopulation.add(individual);
         }
-        population.addAll(randomPopulation.values());
+        population.addAll(randomPopulation);
         for(Individual i : population) {
             i.setPackingPlanAndFitness();
         }
     }
 
     private ArrayList<Individual> generateOffspring(int generation) {
-        HashMap<Integer, Individual> mixedPopulation = new HashMap<>(popSize * 3);
+        HashSet<Individual> mixedPopulation = new HashSet<>(popSize * 3);
         while (mixedPopulation.size() < 2 * popSize) {
             Individual[] children = matingPool(generation);
             int chances = 3;
             for (Individual child : children) {
                 while (mixedPopulation.size() < 2 * popSize &&
-                        mixedPopulation.putIfAbsent(child.hashCode(), child) != null && chances > 0) {
+                        mixedPopulation.contains(child) && chances > 0) {
                     child.mutate(mutProb);
                     chances--;
                 }
+                mixedPopulation.add(child);
             }
         }
-        return new ArrayList<>(mixedPopulation.values());
+        return new ArrayList<>(mixedPopulation);
     }
 
     //at this point population is already filled out with rank and crowding distance
