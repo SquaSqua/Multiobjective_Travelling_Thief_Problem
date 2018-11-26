@@ -7,7 +7,7 @@ class ParetoFrontsGenerator {
 
 
     //each calling overrides last set paretoFronts
-    private static ArrayList<ArrayList<Individual>> generateFronts(ArrayList<Individual> population) {
+    private static ArrayList<ArrayList<Individual>> generateFronts(ArrayList<? extends Individual> population) {
         ArrayList<ArrayList<Individual>> paretoFronts = new ArrayList<>();
         paretoFronts.add(new ArrayList<>());
         for(int i = 0; i < population.size(); i++) {

@@ -1,6 +1,6 @@
 import java.util.*;
 
-class Evolution {
+class Evolution implements IMetaheuristics {
 
     private int dimension;
     private int popSize;
@@ -32,7 +32,7 @@ class Evolution {
      * cos robi
      * @return zwraca...
      */
-    String evolve() {
+    public String run() {
         ArrayList<ArrayList<Individual>> paretoFronts;
         initialize();
         for (int generation = 1; generation < numOfGeners; generation++) {
@@ -48,8 +48,8 @@ class Evolution {
         }
         paretoFronts = ParetoFrontsGenerator.generateFrontsWithAssignments(population);
         statistics(paretoFronts);
-        sBMeasures.append(Configuration.getNadir().x + ", " + Configuration.getNadir().y + "\n");
-        sBMeasures.append(Configuration.getIdeal().x + ", " + Configuration.getIdeal().y + "\n");
+        sBMeasures.append(Configuration.getNadir().x).append(", ").append(Configuration.getNadir().y).append("\n");
+        sBMeasures.append(Configuration.getIdeal().x).append(", ").append(Configuration.getIdeal().y).append("\n");
 //        appendPopulationToStringBuilder(sBLastPopFront);
         appendParetoFrontToStringBuilder(sBLastPopFront);
         sBMiddlePopFront.append(sBLastPopFront);
@@ -61,15 +61,15 @@ class Evolution {
 
     private void initialize() {
         for (int i = 0; i < popSize; i++) {
-            population.add(new Individual(dimension));
+            population.add(new Individual_NSGA_II(dimension));
             population.get(population.size() - 1).setPackingPlanAndFitness();
         }
     }
 
-    private ArrayList<Individual> generateOffspring(int generation) {
-        ArrayList<Individual> offspring = new ArrayList<>();
+    private ArrayList<Individual_NSGA_II> generateOffspring(int generation) {
+        ArrayList<Individual_NSGA_II> offspring = new ArrayList<>();
         while (offspring.size() < popSize) {
-            Individual[] children = matingPool(generation);
+            Individual_NSGA_II[] children = matingPool(generation);
             offspring.add(children[0]);
             if (offspring.size() < popSize) {
                 offspring.add(children[1]);
@@ -79,21 +79,21 @@ class Evolution {
     }
 
     //at this point population is already filled out with rank and crowding distance
-    private Individual[] matingPool(int generation) {
-        Individual parent1 = tournament();
-        Individual[] children = parent1.cycleCrossing(tournament(), crossProb, generation);
-        children[0].mutation(mutProb);
-        children[1].mutation(mutProb);
+    private Individual_NSGA_II[] matingPool(int generation) {
+        Individual_NSGA_II parent1 = tournament();
+        Individual_NSGA_II[] children = parent1.cycleCrossing(tournament(), crossProb, generation);
+        children[0].mutate(mutProb);
+        children[1].mutate(mutProb);
         return children;
     }
 
-    private Individual tournament() {
+    private Individual_NSGA_II tournament() {
 
-        Individual bestIndividual = population.get(0);//just any individual to initialize
+        Individual_NSGA_II bestIndividual = (Individual_NSGA_II)population.get(0);//just any individual to initialize
         int bestRank = Integer.MAX_VALUE;
         Random rand = new Random();
         for (int i = 0; i < tournamentSize; i++) {
-            Individual individual = population.get(rand.nextInt(popSize));
+            Individual_NSGA_II individual = (Individual_NSGA_II)population.get(rand.nextInt(popSize));
             int rank = individual.getRank();
             if (rank < bestRank) {
                 bestRank = rank;
