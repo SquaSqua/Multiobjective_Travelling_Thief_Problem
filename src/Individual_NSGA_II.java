@@ -6,11 +6,12 @@ class Individual_NSGA_II extends Individual {
         super(dimension);
     }
 
-    private Individual_NSGA_II(short[] route, int generation) {
+    Individual_NSGA_II(short[] route, int generation) {
         super(route, generation);
     }
 
-    void mutate(double mutProb) {
+    @Override
+    void mutate(float mutProb) {
         for(int i = 0; i < route.length - 1; i++) {
             if(Math.random() < mutProb) {
                 int swapIndex = new Random().nextInt(route.length - 1);

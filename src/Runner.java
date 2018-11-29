@@ -2,15 +2,16 @@ import java.io.FileNotFoundException;
 import java.io.PrintWriter;
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.Arrays;
 
 public class Runner {
     public static void main(String[] args) {
         long start = System.currentTimeMillis();
-        String definitionFile = "src/definitionFiles/hard_3.ttp";
+        String definitionFile = "src/definitionFiles/hard_0.ttp";
         ConfigurationProvider configProvider = new ConfigurationProvider();
         configProvider.readFile(definitionFile);
 
-        Evolution population = new Evolution(10, 4, 6, 0.5f, 0.2f);
+        Evolution population = new Evolution(100, 300, 6, 0.5f, 0.02f);
         Multiobjective_Tabu_Search mots = new Multiobjective_Tabu_Search(3, 20, 100);
 
         searchForPareto(population);

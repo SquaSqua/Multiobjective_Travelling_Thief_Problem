@@ -33,12 +33,11 @@ abstract class Individual {
         this.birthday = 0;
     }
 
-
-
     int compareTo(Individual o) {
         return (int) Math.signum((Math.signum(fitnessTime - o.fitnessTime) * -1)+ Math.signum((fitnessWage - o.fitnessWage)));
     }
 
+    abstract void mutate(float mutProb);
 
     //getters
     short[] getRoute() {

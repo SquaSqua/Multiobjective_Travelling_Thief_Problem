@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.Arrays;
 
 class GreedyPackingPlan {
 
@@ -26,7 +27,7 @@ class GreedyPackingPlan {
             for(int i = startIndex; i < endIndex - 1; ) {
                 completeDistance += distances[route[i]][route[++i]];
             }
-            completeDistance += distances[route.length - 2][0];
+            completeDistance += distances[route[route.length - 2]][route[0]];
         }
         else {
             for(int i = startIndex; i < endIndex; i++) {

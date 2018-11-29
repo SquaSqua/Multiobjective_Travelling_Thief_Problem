@@ -22,6 +22,7 @@ class Multiobjective_Tabu_Search implements IMetaheuristics {
     }
 
     public String run() {
+        initialize();
         for(Individual individual : solutions) {
 
         }

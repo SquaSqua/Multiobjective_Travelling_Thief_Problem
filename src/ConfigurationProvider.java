@@ -72,8 +72,9 @@ class ConfigurationProvider {
                 if (i == j) {
                     distance = 0;
                 } else {
-                    distance = Math.sqrt(Math.abs(cities[i][COORDINATE_X_OF_CITY] - cities[j][COORDINATE_X_OF_CITY])
-                            + Math.abs(cities[i][COORDINATE_Y_OF_CITY] - cities[j][COORDINATE_Y_OF_CITY]));
+                    double a = cities[i][COORDINATE_X_OF_CITY] - cities[j][COORDINATE_X_OF_CITY];
+                    double b = cities[i][COORDINATE_Y_OF_CITY] - cities[j][COORDINATE_Y_OF_CITY];
+                    distance = Math.sqrt( a * a + b * b);
                 }
                 distances[i][j] = distance;
                 distances[j][i] = distance;//redundant
