@@ -39,6 +39,8 @@ abstract class Individual {
 
     abstract void mutate(float mutProb);
 
+
+
     //getters
     short[] getRoute() {
         return route;

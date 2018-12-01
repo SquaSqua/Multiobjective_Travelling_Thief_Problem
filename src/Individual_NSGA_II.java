@@ -6,7 +6,7 @@ class Individual_NSGA_II extends Individual {
         super(dimension);
     }
 
-    Individual_NSGA_II(short[] route, int generation) {
+    private Individual_NSGA_II(short[] route, int generation) {
         super(route, generation);
     }
 

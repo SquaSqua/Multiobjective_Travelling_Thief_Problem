@@ -4,14 +4,14 @@ class Multiobjective_Tabu_Search implements IMetaheuristics {
 
     private int numberOfSolutions;
     private int numberOfGeners;
-    private int tabuSize;
     private int dimension;
+    static int tabuSize;
     private ArrayList<Individual> solutions;
 
     Multiobjective_Tabu_Search(int numberOfSolutions, int numberOfGeners, int tabuSize) {
         this.numberOfSolutions = numberOfSolutions;
         this.numberOfGeners = numberOfGeners;
-        this.tabuSize = tabuSize;
+        Multiobjective_Tabu_Search.tabuSize = tabuSize;
         dimension = Configuration.getDimension();
     }
 

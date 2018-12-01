@@ -1,7 +1,8 @@
-import java.util.Random;
 
 public class Individual_MOTS extends Individual{
 
+    Integer[] tabu = new Integer[Multiobjective_Tabu_Search.tabuSize];
+    int current
 
     Individual_MOTS(short[] route, int birthday) {
         super(route, birthday);
@@ -16,5 +17,9 @@ public class Individual_MOTS extends Individual{
             route[index] = temp;
         }
         setPackingPlanAndFitness();
+    }
+
+    public void addVisitedIndividual() {
+
     }
 }

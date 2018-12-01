@@ -2,7 +2,6 @@ import java.io.FileNotFoundException;
 import java.io.PrintWriter;
 import java.time.LocalDate;
 import java.time.LocalTime;
-import java.util.Arrays;
 
 public class Runner {
     public static void main(String[] args) {
