@@ -15,6 +15,7 @@ public class Runner {
 
         searchForPareto(population);
         countTimeUpHere(start);
+
     }
 
     private static void searchForPareto(IMetaheuristics algorithm) {

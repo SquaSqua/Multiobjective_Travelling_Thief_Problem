@@ -2,10 +2,15 @@
 public class Individual_MOTS extends Individual{
 
     Integer[] tabu = new Integer[Multiobjective_Tabu_Search.tabuSize];
-    int current
+    int indexOfOldest = 0;
+    int[] vectorLambda = new int[Multiobjective_Tabu_Search.NUMBER_OF_OBJECTIVES];
 
     Individual_MOTS(short[] route, int birthday) {
         super(route, birthday);
+    }
+
+    Individual_MOTS(int dimension) {
+        super(dimension);
     }
 
     @Override
@@ -19,7 +24,17 @@ public class Individual_MOTS extends Individual{
         setPackingPlanAndFitness();
     }
 
-    public void addVisitedIndividual() {
+    boolean contains(Individual individual) {
+        Integer hash = individual.hashCode();
+        for(Integer i : tabu) {
+            if(hash == i)
+                return true;
+        }
+        return false;
+    }
 
+    void addVisitedIndividual(Individual individual) {
+        tabu[indexOfOldest] = individual.hashCode();
+        indexOfOldest = indexOfOldest == tabu.length - 1 ? 0 : indexOfOldest++;
     }
 }
