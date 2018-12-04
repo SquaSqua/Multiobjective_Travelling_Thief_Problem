@@ -1,4 +1,6 @@
+import java.util.Arrays;
 import java.util.Objects;
+import java.util.Random;
 
 public class Individual_MOTS extends Individual{
 
@@ -15,11 +17,13 @@ public class Individual_MOTS extends Individual{
         super(dimension);
     }
 
-    void mutate() {
-        int index = 0;
-        short temp = route[index];
-        route[index] = route[++index];
-        route[index] = temp;
+    public void mutate() {
+        Random r = new Random();
+        int indexFrom = r.nextInt(Configuration.getDimension());
+        int indexTo = r.nextInt(Configuration.getDimension());
+        short temp = route[indexFrom];
+        route[indexFrom] = route[indexTo];
+        route[indexTo] = temp;
         setPackingPlanAndFitness();
     }
 

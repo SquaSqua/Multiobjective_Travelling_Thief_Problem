@@ -11,7 +11,8 @@ public class Runner {
         configProvider.readFile(definitionFile);
 
         Evolution population = new Evolution(100, 300, 6, 0.5f, 0.02f);
-        Multiobjective_Tabu_Search mots = new Multiobjective_Tabu_Search(5, 50, 20, 20);
+//        Multiobjective_Tabu_Search mots = new Multiobjective_Tabu_Search(5, 50, 20, 20);
+        Multiobjective_Tabu_Search mots = new Multiobjective_Tabu_Search(10, 40, 20, 20);
 
 //        searchForPareto(population);
         searchForPareto(mots);

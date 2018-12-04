@@ -72,7 +72,7 @@ class Multiobjective_Tabu_Search implements IMetaheuristics {
 
     private Individual_MOTS findBestNeighbour(Individual_MOTS individual, int birthday, double[] lambdaVector) {
         Individual_MOTS best = individual;
-        double meritOFBest = countMerit(best, lambdaVector);
+        double meritOfBest = -Double.MAX_VALUE;
         for (int i = 0; i < neighbourhoodSize; i++) {
             short[] route = new short[individual.getRoute().length];
             System.arraycopy(individual.getRoute(), 0, route, 0, route.length);
@@ -80,9 +80,10 @@ class Multiobjective_Tabu_Search implements IMetaheuristics {
             neighbour.mutate();
             if (!individual.containsInTabu(neighbour)) {
                 neighbour.setPackingPlanAndFitness();
+                individual.addVisitedIndividual(neighbour);//dodane tymczasowo
                 double merit = countMerit(neighbour, lambdaVector);
-                if (meritOFBest <= merit) {
-                    meritOFBest = merit;
+                if (meritOfBest <= merit) {
+                    meritOfBest = merit;
                     best = neighbour;
                 }
             }
