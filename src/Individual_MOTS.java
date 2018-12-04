@@ -4,8 +4,6 @@ public class Individual_MOTS extends Individual{
 
     private static final int HASH_INDEX = 0;
     private static final int INDIVIDUAL_INDEX = 1;
-    private static final int WAGE_INDEX = 0;
-    private static final int TIME_INDEX = 1;
     private Object[][] tabuList = new Object[Multiobjective_Tabu_Search.tabuSize][2];
     private int indexOfOldest = 0;
 
@@ -51,10 +49,11 @@ public class Individual_MOTS extends Individual{
 
     void addVisitedIndividual(Individual individual) {
         tabuList[indexOfOldest][HASH_INDEX] = individual.hashCode();
-        indexOfOldest = indexOfOldest == tabuList.length - 1 ? 0 : indexOfOldest++;
+        tabuList[indexOfOldest][INDIVIDUAL_INDEX] = individual;
+        indexOfOldest = indexOfOldest == tabuList.length - 1 ? 0 : ++indexOfOldest;
     }
 
-    double countMerit(double[] lambdaVector, double maxWage, double maxTime) {
-        return lambdaVector[WAGE_INDEX] * (fitnessWage/maxWage) + lambdaVector[TIME_INDEX] * (fitnessTime/maxTime) * (-1);
+    void reassignTabuList(Individual_MOTS toIndividual) {
+        toIndividual.tabuList = this.tabuList;
     }
 }

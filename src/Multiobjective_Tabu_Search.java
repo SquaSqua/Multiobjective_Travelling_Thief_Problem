@@ -17,6 +17,8 @@ class Multiobjective_Tabu_Search implements IMetaheuristics {
     private double[] distanceNormalizingFactor_Wage = new double[NUMBER_OF_OBJECTIVES];
     private double[] pi;
 
+    private StringBuilder sBresults = new StringBuilder();
+
     Multiobjective_Tabu_Search(int numberOfSolutions, int numberOfGeners, int neighbourhoodSize, int tabuSize) {
         solutions = new ArrayList<>();
         this.numberOfSolutions = numberOfSolutions;
@@ -46,10 +48,10 @@ class Multiobjective_Tabu_Search implements IMetaheuristics {
                     if (compared_j != -1 && !individual_j.equals(individual_i)) {
                         double weight = weight(individual_i, individual_j);
                         if (individual_i.getFitnessWage() > individual_j.getFitnessWage()) {
-                            lambdaVector[0] += weight * (distanceNormalizingFactor_Wage[1] - distanceNormalizingFactor_Wage[0]);
+                            lambdaVector[WAGE_INDEX] += weight * pi[WAGE_INDEX];
                         }
                         if (individual_i.getFitnessTime() > individual_j.getFitnessTime()) {
-                            lambdaVector[1] += weight * (distanceNormalizingFactor_Time[1] - distanceNormalizingFactor_Time[0]);
+                            lambdaVector[TIME_INDEX] += weight * pi[WAGE_INDEX];
                         }
                     }
                 }
@@ -58,10 +60,34 @@ class Multiobjective_Tabu_Search implements IMetaheuristics {
                 }
                 normalizeVector(lambdaVector);
                 Individual_MOTS winner = findBestNeighbour(individual_i, generation, lambdaVector);
+                solutions.get(i).reassignTabuList(winner);
+                winner.addVisitedIndividual(solutions.get(i));
                 solutions.set(i, winner);
             }
+            appendSolutionsToStringBuilder(sBresults);
         }
-        return " ";
+        String results = sBresults.toString();
+        return results;
+    }
+
+    private Individual_MOTS findBestNeighbour(Individual_MOTS individual, int birthday, double[] lambdaVector) {
+        Individual_MOTS best = individual;
+        double meritOFBest = countMerit(best, lambdaVector);
+        for (int i = 0; i < neighbourhoodSize; i++) {
+            short[] route = new short[individual.getRoute().length];
+            System.arraycopy(individual.getRoute(), 0, route, 0, route.length);
+            Individual_MOTS neighbour = new Individual_MOTS(route, birthday);
+            neighbour.mutate();
+            if (!individual.containsInTabu(neighbour)) {
+                neighbour.setPackingPlanAndFitness();
+                double merit = countMerit(neighbour, lambdaVector);
+                if (meritOFBest <= merit) {
+                    meritOFBest = merit;
+                    best = neighbour;
+                }
+            }
+        }
+        return best;
     }
 
     private void rangeNormalization() {
@@ -73,8 +99,10 @@ class Multiobjective_Tabu_Search implements IMetaheuristics {
 
     private double[] countPi() {
         double[] pi = new double[NUMBER_OF_OBJECTIVES];
-        pi[WAGE_INDEX] = 1 / (distanceNormalizingFactor_Wage[MAX_FROM_RANGE] - distanceNormalizingFactor_Wage[MIN_FROM_RANGE]);
-        pi[TIME_INDEX] = 1 / (distanceNormalizingFactor_Time[MAX_FROM_RANGE] - distanceNormalizingFactor_Time[MIN_FROM_RANGE]);
+        pi[WAGE_INDEX] = 1 /
+                (distanceNormalizingFactor_Wage[MAX_FROM_RANGE] - distanceNormalizingFactor_Wage[MIN_FROM_RANGE]);
+        pi[TIME_INDEX] = 1 /
+                (distanceNormalizingFactor_Time[MAX_FROM_RANGE] - distanceNormalizingFactor_Time[MIN_FROM_RANGE]);
         return pi;
     }
 
@@ -84,7 +112,6 @@ class Multiobjective_Tabu_Search implements IMetaheuristics {
         weight += pi[TIME_INDEX]
                 * Math.abs(ind_i.getFitnessTime() - ind_j.getFitnessTime());
         return 1 / weight;
-
     }
 
     private double[] setRandomLambda() {
@@ -103,23 +130,19 @@ class Multiobjective_Tabu_Search implements IMetaheuristics {
         }
     }
 
-    private Individual_MOTS findBestNeighbour(Individual_MOTS individual, int birthday, double[] lambdaVector) {
-        Individual_MOTS best = individual;
-        double meritOFBest = best.countMerit(lambdaVector, distanceNormalizingFactor_Wage[1], distanceNormalizingFactor_Time[1]);
-        for (int i = 0; i < neighbourhoodSize; i++) {
-            short[] route = new short[individual.getRoute().length];
-            System.arraycopy(individual.getRoute(), 0, route, 0, route.length);
-            Individual_MOTS neighbour = new Individual_MOTS(route, birthday);
-            neighbour.mutate();
-            if (!individual.containsInTabu(neighbour)) {
-                neighbour.setPackingPlanAndFitness();
-                double merit = neighbour.countMerit(lambdaVector, distanceNormalizingFactor_Wage[1], distanceNormalizingFactor_Time[1]);
-                if (meritOFBest < merit) {
-                    meritOFBest = merit;
-                    best = neighbour;
-                }
-            }
+    private double countMerit(Individual_MOTS individual, double[] lambdaVector) {
+        return (lambdaVector[WAGE_INDEX] *
+                (individual.getFitnessWage() / distanceNormalizingFactor_Wage[MAX_FROM_RANGE]))
+                + (lambdaVector[TIME_INDEX] *
+                (individual.getFitnessTime() / distanceNormalizingFactor_Time[MAX_FROM_RANGE]) * (-1));
+    }
+
+    private void appendSolutionsToStringBuilder(StringBuilder sB) {
+        sB.append("Czas podrozy").append(", ").append("Zarobek").append(", ").append("Stworzony w generacji\n");
+        for (Individual_MOTS i : solutions) {
+                sB.append(i.getFitnessTime()).append(", ").append(i.getFitnessWage()).append(", ").append(i.getBirthday());
+//                    .append(Arrays.toString(i.getRoute())).append(", ").append(Arrays.toString(i.getPackingPlan()));
+                sB.append("\n");
         }
-        return best;
     }
 }

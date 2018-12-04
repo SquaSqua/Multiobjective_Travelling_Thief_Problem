@@ -2,23 +2,25 @@ import java.io.FileNotFoundException;
 import java.io.PrintWriter;
 import java.time.LocalDate;
 import java.time.LocalTime;
-import java.util.Arrays;
 
 public class Runner {
     public static void main(String[] args) {
-//
-        short[] arr1 = new short[] {1,2,3};
-        short[] arr2 = new short[3];
-        System.arraycopy(arr1, 0, arr2, 0, 3);
-        arr1[0] = 10;
-        System.out.println(Arrays.toString(arr1));
-        System.out.println(Arrays.toString(arr2));
+        long start = System.currentTimeMillis();
+        String definitionFile = "src/definitionFiles/hard_0.ttp";
+        ConfigurationProvider configProvider = new ConfigurationProvider();
+        configProvider.readFile(definitionFile);
 
+        Evolution population = new Evolution(100, 300, 6, 0.5f, 0.02f);
+        Multiobjective_Tabu_Search mots = new Multiobjective_Tabu_Search(5, 50, 20, 20);
+
+//        searchForPareto(population);
+        searchForPareto(mots);
+        countTimeUpHere(start);
     }
 
     private static void searchForPareto(IMetaheuristics algorithm) {
         try {
-            PrintWriter out = new PrintWriter(giveName());
+            PrintWriter out = new PrintWriter(giveName(algorithm));
             out.println(algorithm.run());
             out.close();
         } catch (FileNotFoundException ex) {
@@ -26,12 +28,12 @@ public class Runner {
         }
     }
 
-    private static String giveName() {
+    private static String giveName(IMetaheuristics algorithm) {
         LocalDate date = LocalDate.now();
         LocalTime time = LocalTime.now();
         String dateAndTime = date.getMonth() + "_" + date.getDayOfMonth()
                 + "__" + time.getHour() + "_" + time.getMinute() + "_" + time.getSecond();
-        return "results_" + dateAndTime + ".csv";
+        return dateAndTime + "_" + algorithm.getClass().getName() + ".csv";
     }
 
     private static void countTimeUpHere(long start) {
