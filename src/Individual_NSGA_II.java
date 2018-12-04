@@ -10,7 +10,6 @@ class Individual_NSGA_II extends Individual {
         super(route, generation);
     }
 
-    @Override
     void mutate(float mutProb) {
         for(int i = 0; i < route.length - 1; i++) {
             if(Math.random() < mutProb) {

@@ -4,8 +4,8 @@ abstract class Individual {
 
     short[] route;
     private boolean[] packingPlan;
-    private double fitnessTime;
-    private int fitnessWage;
+    double fitnessTime;
+    int fitnessWage;
     private int birthday;
 
     //fields accessed only through methods in ParetoFrontGenerator
@@ -36,20 +36,6 @@ abstract class Individual {
     int compareTo(Individual o) {
         return (int) Math.signum((Math.signum(fitnessTime - o.fitnessTime) * -1)+ Math.signum((fitnessWage - o.fitnessWage)));
     }
-
-    @Override
-    public boolean equals(Object object) {
-        if(this == object)
-            return true;
-        if(this.getClass() != object.getClass())
-            return false;
-        Individual_MOTS individual = (Individual_MOTS) object;
-        return this.getFitnessWage() == individual.getFitnessWage() && this.getFitnessTime() == individual.getFitnessTime();
-    }
-
-    abstract void mutate(float mutProb);
-
-
 
     //getters
     short[] getRoute() {

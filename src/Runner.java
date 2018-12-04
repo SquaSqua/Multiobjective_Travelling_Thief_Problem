@@ -2,19 +2,17 @@ import java.io.FileNotFoundException;
 import java.io.PrintWriter;
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.Arrays;
 
 public class Runner {
     public static void main(String[] args) {
-        long start = System.currentTimeMillis();
-        String definitionFile = "src/definitionFiles/hard_0.ttp";
-        ConfigurationProvider configProvider = new ConfigurationProvider();
-        configProvider.readFile(definitionFile);
-
-        Evolution population = new Evolution(100, 300, 6, 0.5f, 0.02f);
-        Multiobjective_Tabu_Search mots = new Multiobjective_Tabu_Search(3, 20, 100);
-
-        searchForPareto(population);
-        countTimeUpHere(start);
+//
+        short[] arr1 = new short[] {1,2,3};
+        short[] arr2 = new short[3];
+        System.arraycopy(arr1, 0, arr2, 0, 3);
+        arr1[0] = 10;
+        System.out.println(Arrays.toString(arr1));
+        System.out.println(Arrays.toString(arr2));
 
     }
 
