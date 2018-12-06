@@ -4,8 +4,8 @@ abstract class Individual {
 
     short[] route;
     private boolean[] packingPlan;
-    double fitnessTime;
-    int fitnessWage;
+    private double fitnessTime;
+    private int fitnessWage;
     private int birthday;
 
     //fields accessed only through methods in ParetoFrontGenerator

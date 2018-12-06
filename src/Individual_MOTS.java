@@ -1,4 +1,3 @@
-import java.util.Arrays;
 import java.util.Objects;
 import java.util.Random;
 
@@ -17,7 +16,7 @@ public class Individual_MOTS extends Individual{
         super(dimension);
     }
 
-    public void mutate() {
+    void mutate() {
         Random r = new Random();
         int indexFrom = r.nextInt(Configuration.getDimension());
         int indexTo = r.nextInt(Configuration.getDimension());
@@ -51,7 +50,7 @@ public class Individual_MOTS extends Individual{
         return this.getFitnessWage() == individual.getFitnessWage() && this.getFitnessTime() == individual.getFitnessTime();
     }
 
-    void addVisitedIndividual(Individual individual) {
+    void addVisitedIndividual(Individual_MOTS individual) {
         tabuList[indexOfOldest][HASH_INDEX] = individual.hashCode();
         tabuList[indexOfOldest][INDIVIDUAL_INDEX] = individual;
         indexOfOldest = indexOfOldest == tabuList.length - 1 ? 0 : ++indexOfOldest;
@@ -59,5 +58,6 @@ public class Individual_MOTS extends Individual{
 
     void reassignTabuList(Individual_MOTS toIndividual) {
         toIndividual.tabuList = this.tabuList;
+        toIndividual.indexOfOldest = this.indexOfOldest;
     }
 }

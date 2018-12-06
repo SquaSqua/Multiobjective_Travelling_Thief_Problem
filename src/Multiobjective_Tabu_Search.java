@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.Random;
 
 class Multiobjective_Tabu_Search implements IMetaheuristics {
 
@@ -13,11 +14,11 @@ class Multiobjective_Tabu_Search implements IMetaheuristics {
     private int dimension;
     static int tabuSize;
     private ArrayList<Individual_MOTS> solutions;
-    private double[] distanceNormalizingFactor_Time = new double[NUMBER_OF_OBJECTIVES];
-    private double[] distanceNormalizingFactor_Wage = new double[NUMBER_OF_OBJECTIVES];
+    private double[] distanceNormalizingFactor_Time = new double[2];
+    private double[] distanceNormalizingFactor_Wage = new double[2];
     private double[] pi;
 
-    private StringBuilder sBresults = new StringBuilder();
+    private StringBuilder sbResults = new StringBuilder();
 
     Multiobjective_Tabu_Search(int numberOfSolutions, int numberOfGeners, int neighbourhoodSize, int tabuSize) {
         solutions = new ArrayList<>();
@@ -38,6 +39,8 @@ class Multiobjective_Tabu_Search implements IMetaheuristics {
     }
 
     public String run() {
+//        appendTitleToStringBuilder(sbResults);
+        appendTitleToStringBuilder_alternative(sbResults);
         initialize();
         for (int generation = 0; generation < numberOfGeners; generation++) {
             for (int i = 0; i < solutions.size(); i++) {
@@ -64,10 +67,12 @@ class Multiobjective_Tabu_Search implements IMetaheuristics {
                 winner.addVisitedIndividual(solutions.get(i));
                 solutions.set(i, winner);
             }
-            appendSolutionsToStringBuilder(sBresults);
+//            appendSolutionsToStringBuilder(sbResults);
+            appendSolutionsToStringBuilder_alternative(sbResults);
+
+            recalculatePi();
         }
-        String results = sBresults.toString();
-        return results;
+        return sbResults.toString();
     }
 
     private Individual_MOTS findBestNeighbour(Individual_MOTS individual, int birthday, double[] lambdaVector) {
@@ -80,15 +85,19 @@ class Multiobjective_Tabu_Search implements IMetaheuristics {
             neighbour.mutate();
             if (!individual.containsInTabu(neighbour)) {
                 neighbour.setPackingPlanAndFitness();
-                individual.addVisitedIndividual(neighbour);//dodane tymczasowo
+//                System.out.println("\npi: " + pi[0] + ", " + pi[1]);
+//                System.out.println("Zarobek " + neighbour.getFitnessWage() + ", Czas " + neighbour.getFitnessTime());
+//                System.out.println("lambdaWage: " + lambdaVector[0] + ", lambdaTime: " + lambdaVector[1]);
+                individual.addVisitedIndividual(neighbour);//all individuals are added to tabu
                 double merit = countMerit(neighbour, lambdaVector);
+//                System.out.println("Merit " + merit);
                 if (meritOfBest <= merit) {
                     meritOfBest = merit;
                     best = neighbour;
                 }
             }
         }
-        return best;
+        return countMerit(individual, lambdaVector) > meritOfBest ? individual : best;//best;
     }
 
     private void rangeNormalization() {
@@ -104,6 +113,7 @@ class Multiobjective_Tabu_Search implements IMetaheuristics {
                 (distanceNormalizingFactor_Wage[MAX_FROM_RANGE] - distanceNormalizingFactor_Wage[MIN_FROM_RANGE]);
         pi[TIME_INDEX] = 1 /
                 (distanceNormalizingFactor_Time[MAX_FROM_RANGE] - distanceNormalizingFactor_Time[MIN_FROM_RANGE]);
+        normalizeVector(pi);//dodane na polecenie Wojtka
         return pi;
     }
 
@@ -116,12 +126,13 @@ class Multiobjective_Tabu_Search implements IMetaheuristics {
     }
 
     private double[] setRandomLambda() {
-        return new double[]{Math.random(), Math.random()};
+        Random random = new Random();
+        return new double[]{random.nextDouble(), random.nextDouble()};
     }
 
     private void normalizeVector(double[] vector) {
         double value = 0;
-        for (double component : vector) {
+        for(double component : vector) {
             value += component * component;
         }
         value = Math.sqrt(value);
@@ -138,12 +149,63 @@ class Multiobjective_Tabu_Search implements IMetaheuristics {
                 (individual.getFitnessTime() / distanceNormalizingFactor_Time[MAX_FROM_RANGE]) * (-1));
     }
 
-    private void appendSolutionsToStringBuilder(StringBuilder sB) {
-        sB.append("Czas podrozy").append(", ").append("Zarobek").append(", ").append("Stworzony w generacji\n");
-        for (Individual_MOTS i : solutions) {
-                sB.append(i.getFitnessTime()).append(", ").append(i.getFitnessWage()).append(", ").append(i.getBirthday());
-//                    .append(Arrays.toString(i.getRoute())).append(", ").append(Arrays.toString(i.getPackingPlan()));
-                sB.append("\n");
+    private void appendTitleToStringBuilder(StringBuilder sB) {
+//        for (Individual_MOTS i : solutions) {
+//            sB.append("Zarobek").append(", ").append("Czas podrozy").append(", ").append("Z populacji").append("\n");
+//        }
+//        sB.append("\n");
+    }
+
+    private void appendTitleToStringBuilder_alternative(StringBuilder sB) {
+        for (int i = 0; i < numberOfSolutions; i++) {
+            sB.append("Zarobek").append(", ").append("Czas podrozy").append(", ").append("Z populacji").append(", ");
         }
+        sB.append("\n");
+    }
+
+    private void appendSolutionsToStringBuilder(StringBuilder sB) {
+        for (Individual_MOTS i : solutions) {
+                sB.append(i.getFitnessWage()).append(", ").append(i.getFitnessTime()).append(", ").append(i.getBirthday()).append("\n");
+//                    .append(Arrays.toString(i.getRoute())).append(", ").append(Arrays.toString(i.getPackingPlan()));
+        }
+//        sB.append("\n");
+    }
+
+    private void appendSolutionsToStringBuilder_alternative(StringBuilder sB) {
+        for (Individual_MOTS i : solutions) {
+            sB.append(i.getFitnessWage()).append(", ").append(i.getFitnessTime()).append(", ").append(i.getBirthday()).append(", ");
+//                    .append(Arrays.toString(i.getRoute())).append(", ").append(Arrays.toString(i.getPackingPlan()));
+        }
+        sB.append("\n");
+    }
+
+    private void recalculatePi() {
+
+        double minX = Double.MAX_VALUE;
+        double minY = Double.MAX_VALUE;
+        double maxX = -Double.MAX_VALUE;
+        double maxY = -Double.MAX_VALUE;
+        for(Individual i : solutions) {
+            double fitnessX = i.getFitnessWage();
+            double fitnessY = i.getFitnessTime();
+            if(fitnessX > maxX) {
+                maxX = fitnessX;
+            }
+            else if(fitnessX < minX) {
+                minX = fitnessX;
+            }
+            if(fitnessY > maxY) {
+                maxY = fitnessY;
+            }
+            else if(fitnessY < minY) {
+                minY = fitnessY;
+            }
+        }
+        distanceNormalizingFactor_Wage[0] = minX;
+        distanceNormalizingFactor_Wage[1] = maxX;
+        distanceNormalizingFactor_Time[0] = minY;
+        distanceNormalizingFactor_Time[1] = maxY;
+        pi[0] = 1 / (maxX - minX);
+        pi[1] = 1 / (maxY - minY);
     }
 }
