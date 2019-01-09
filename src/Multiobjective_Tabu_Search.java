@@ -97,7 +97,7 @@ class Multiobjective_Tabu_Search implements IMetaheuristics {
                 }
             }
         }
-        return countMerit(individual, lambdaVector) > meritOfBest ? individual : best;//best;
+        return countMerit(individual, lambdaVector) > meritOfBest ? individual : best;
     }
 
     private void rangeNormalization() {
@@ -105,16 +105,6 @@ class Multiobjective_Tabu_Search implements IMetaheuristics {
         distanceNormalizingFactor_Time[MAX_FROM_RANGE] = Configuration.getNadir().y;
         distanceNormalizingFactor_Wage[MIN_FROM_RANGE] = Configuration.getNadir().x;
         distanceNormalizingFactor_Wage[MAX_FROM_RANGE] = Configuration.getIdeal().x;
-    }
-
-    private double[] countPi() {
-        double[] pi = new double[NUMBER_OF_OBJECTIVES];
-        pi[WAGE_INDEX] = 1 /
-                (distanceNormalizingFactor_Wage[MAX_FROM_RANGE] - distanceNormalizingFactor_Wage[MIN_FROM_RANGE]);
-        pi[TIME_INDEX] = 1 /
-                (distanceNormalizingFactor_Time[MAX_FROM_RANGE] - distanceNormalizingFactor_Time[MIN_FROM_RANGE]);
-        normalizeVector(pi);//dodane na polecenie Wojtka
-        return pi;
     }
 
     private double weight(Individual ind_i, Individual ind_j) {
@@ -141,6 +131,17 @@ class Multiobjective_Tabu_Search implements IMetaheuristics {
             vector[i] = vector[i] / value;
         }
     }
+
+//    private void normalizeVector(double[] vector) {//no nie wiem...
+//        double value = 0;
+//        for(double component : vector) {
+//            value += component;
+//        }
+//
+//        for (int i = 0; i < vector.length; i++) {
+//            vector[i] = vector[i] / value;
+//        }
+//    }
 
     private double countMerit(Individual_MOTS individual, double[] lambdaVector) {
         return (lambdaVector[WAGE_INDEX] *
@@ -179,6 +180,16 @@ class Multiobjective_Tabu_Search implements IMetaheuristics {
         sB.append("\n");
     }
 
+    private double[] countPi() {
+        double[] pi = new double[NUMBER_OF_OBJECTIVES];
+        pi[WAGE_INDEX] = 1 /
+                (distanceNormalizingFactor_Wage[MAX_FROM_RANGE] - distanceNormalizingFactor_Wage[MIN_FROM_RANGE]);
+        pi[TIME_INDEX] = 1 /
+                (distanceNormalizingFactor_Time[MAX_FROM_RANGE] - distanceNormalizingFactor_Time[MIN_FROM_RANGE]);
+        normalizeVector(pi);//dodane na polecenie Wojtka
+        return pi;
+    }
+
     private void recalculatePi() {
 
         double minX = Double.MAX_VALUE;
@@ -207,5 +218,6 @@ class Multiobjective_Tabu_Search implements IMetaheuristics {
         distanceNormalizingFactor_Time[1] = maxY;
         pi[0] = 1 / (maxX - minX);
         pi[1] = 1 / (maxY - minY);
+        normalizeVector(pi);
     }
 }
